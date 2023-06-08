@@ -8,24 +8,33 @@
 <br></br>
 <div class="container">
 <form class="row g-3 needs-validation" novalidate>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="validationCustom01" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="validationCustom01" value="" required>
+      <input name = "nombre" type="text" class="form-control" id="validationCustom01" value="" required>
       <div class="valid-feedback">
         Muy bien!
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="validationCustom02" class="form-label">Apellido</label>
-      <input type="text" class="form-control" id="validationCustom02" value="" required>
+      <input name = "apellido" type="text" class="form-control" id="validationCustom02" value="" required>
       <div class="valid-feedback">
         Muy bien!
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <label for="validationCustomUsername" class="form-label">Contraseña</label>
       <div class="input-group has-validation">
-        <input type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+        <input name = "contraseña" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+        <div class="invalid-feedback">
+        Elige una contraseña.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label for="validationCustomUsername" class="form-label">Confirmar Contraseña</label>
+      <div class="input-group has-validation">
+        <input name = "confirmacion" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
         <div class="invalid-feedback">
         Elige una contraseña.
         </div>
@@ -33,25 +42,25 @@
     </div>
     <div class="col-md-6">
       <label for="validationCustom03" class="form-label">Direccion</label>
-      <input type="text" class="form-control" id="validationCustom03" required>
+      <input name = "direccion" type="text" class="form-control" id="validationCustom03" required>
       <div class="invalid-feedback">
         Ingresa una direccion valida.
       </div>
     </div>
     <div class="col-md-3">
       <label for="validationCustom04" class="form-label">Departamento</label>
-      <select class="form-select" id="validationCustom04" required>
+      <select name = "departamento" class="form-select" id="validationCustom04" required>
         <option selected disabled value="">Elige...</option>
-        <option>Chinandega</option>
-        <option>Leon</option>
-        <option>Managua</option>
-        <option>Masaya</option>
-        <option>Granada</option>
-        <option>Carazo</option>
-        <option>Rivas</option>
-        <option>Esteli</option>
-        <option>Jinotega</option>
-        <option>Matagalpa</option>
+        <option values = "Chinandega">Chinandega</option>
+        <option values = "Leon">Leon</option>
+        <option values = "Managua">Managua</option>
+        <option values = "Masaya">Masaya</option>
+        <option values = "Granada">Granada</option>
+        <option values = "Carazo">Carazo</option>
+        <option values = "Rivas">Rivas</option>
+        <option values = "Esteli">Esteli</option>
+        <option values = "Jinotega">Jinotega</option>
+        <option values = "Matagalpa">Matagalpa</option>
 
       </select>
       <div class="invalid-feedback">
@@ -60,7 +69,7 @@
     </div>
     <div class="col-md-3">
       <label for="validationCustom05" class="form-label">Numero telefonico</label>
-      <input type="text" class="form-control" id="validationCustom05" required>
+      <input name = "numTelefono" type="text" class="form-control" id="validationCustom05" required>
       <div class="invalid-feedback">
         Ingresa un numero telefonico valido.
       </div>
