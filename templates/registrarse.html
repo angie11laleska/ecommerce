@@ -7,7 +7,7 @@
 <h2>Llena este pequeño formulario para poder registrarte con nosotros</h2>
 <br></br>
 <div class="container">
-<form class="row g-3 needs-validation" novalidate>
+<form class="row g-3 needs-validation" method= "POST" action="/registrarse">
     <div class="col-md-3">
       <label for="validationCustom01" class="form-label">Nombre</label>
       <input name = "nombre" type="text" class="form-control" id="validationCustom01" value="" required>
@@ -22,19 +22,28 @@
         Muy bien!
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+      <label for="validationCustomUsername" class="form-label">Usuario</label>
+      <div class="input-group has-validation">
+        <input name = "usuario" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+        <div class="invalid-feedback">
+        Escribe el nombre del usuario.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
       <label for="validationCustomUsername" class="form-label">Contraseña</label>
       <div class="input-group has-validation">
-        <input name = "contraseña" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+        <input name = "contraseña" type="password" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
         <div class="invalid-feedback">
         Elige una contraseña.
         </div>
       </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <label for="validationCustomUsername" class="form-label">Confirmar Contraseña</label>
       <div class="input-group has-validation">
-        <input name = "confirmacion" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+        <input name = "confirmacion" type="password" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
         <div class="invalid-feedback">
         Elige una contraseña.
         </div>
@@ -69,7 +78,7 @@
     </div>
     <div class="col-md-3">
       <label for="validationCustom05" class="form-label">Numero telefonico</label>
-      <input name = "numTelefono" type="text" class="form-control" id="validationCustom05" required>
+      <input name="celular" type="number" class="form-control" id="validationCustom05" required>
       <div class="invalid-feedback">
         Ingresa un numero telefonico valido.
       </div>

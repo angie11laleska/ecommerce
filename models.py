@@ -20,14 +20,14 @@ def main ():
     )
 
     producto = text("""CREATE TABLE IF NOT EXISTS producto (
-        id_producto SERIAL PRIMARY KEY,
         id_emp INTEGER REFERENCES emprendimiento (id_emp),
+        id_producto SERIAL PRIMARY KEY,
         id_categoria INTEGER REFERENCES categoria (id_categoria),
         nombreProducto VARCHAR(50),
+        imagen BYTEA,
         cant_producto INTEGER,
         precioProducto NUMERIC,
-        descripción TEXT,
-        correo VARCHAR(100)
+        descripción TEXT
         )"""
     )
 
@@ -57,10 +57,11 @@ def main ():
     persona = text ("""CREATE TABLE IF NOT EXISTS persona (
         id_persona SERIAL PRIMARY KEY,
         nombre_persona TEXT NOT NULL,
-        direccion TEXT NOT NULL,
+        apellido_persona TEXT NOT NULL,
+        usuario TEXT NOT NULL,
         celular INTEGER NOT NULL,
-        pago NUMERIC NOT NULL,
-        contra VARCHAR(8),
+        contraseña VARCHAR(8),
+        direccion TEXT,
         roles BOOLEAN NOT NULL
     )"""
     )
@@ -76,7 +77,7 @@ def main ():
     imagen = text("""CREATE TABLE IF NOT EXISTS imagen (
         id_imagen SERIAL PRIMARY KEY,
         id_producto INTEGER REFERENCES producto (id_producto),
-        img_url TEXT
+        img_url BYTEA
     )"""
     )
 
