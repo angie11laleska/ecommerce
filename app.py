@@ -6,15 +6,16 @@ from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 
 load_dotenv()
-
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route("/")
 def index():
+    flash('Este es el index', 'alert-success')
     return render_template("layout.html")
 
 
@@ -40,17 +41,18 @@ def registrarse():
     nombre = request.form.get("nombre")
     apellido = request.form.get("apellido")
     usuario = request.form.get("usuario")
+    celular = request.form.get("celular")
     contraseña = request.form.get("contraseña")
     confirmacion = request.form.get("confirmacion")
-    celular = request.form.get("celular")
     direccion = request.form.get("direccion")
     departamento = request.form.get("departamento")
-    usuario = request.form.get("usuario")
     if not nombre:
         print("Paso por Aca 1")
         return redirect("/registrarse")
     if not apellido:
         print("Paso por Aca 2")
+        return redirect("/registrarse")
+    if not usuario:
         return redirect("/registrarse")
     if not contraseña:
         print("Paso por Aca 3")
