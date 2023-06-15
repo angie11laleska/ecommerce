@@ -125,7 +125,13 @@
           </li>
           <li class="nav-item">
             <img class="nav-icon" src="static/sale.png">
-            <a class="nav-link" style="display: inline" href="#">Comprar</a>
+            <a class="nav-link" id:"registro" href="#" onclick="comprar()" style="display: inline">Comprar</a>
+            <script>
+              function comprar()
+              {
+                window.location.href = "/emprendimiento";
+              }
+            </script>
           </li>
         </ul>
       </div>
