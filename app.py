@@ -162,42 +162,7 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
-    
 
-
-# parte del admin
-@app.route("/admin/categoria" , methods=["GET", "POST"])
-def catadmin():
-    if request.method == "POST":
-        nombre = request.form.get("nombre")
-        query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre_persona":nombre})
-        db.commit()
-   
-        db.execute("update nombre from categoria")
-    return render_template("admin/categoria.html", categorias = query)
-# parte del admin
-@app.route("/admin/categoria" , methods=["GET", "POST"])
-def catadmin():
-    if request.method == "POST":
-        nombre = request.form.get("nombre")
-        query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre_persona":nombre})
-        db.commit()
-   
-        db.execute("update nombre from categoria")
-    return render_template("admin/categoria.html", categorias = query)
-# parte del admin
-@app.route("/admin/categoria" , methods=["GET", "POST"])
-def catadmin():
-    if request.method == "POST":
-        nombre = request.form.get("nombre")
-        query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre_persona":nombre})
-        db.commit()
-   
-        db.execute("update nombre from categoria")
-    return render_template("admin/categoria.html", categorias = query)
 
 @app.route("/logout")
 def logout():
@@ -219,6 +184,5 @@ def catadmin():
         query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
         db.execute(query, {"nombre_persona":nombre})
         db.commit()
-   
-        db.execute("update nombre from categoria")
+        redirect("/admin/categoria")
     return render_template("admin/categoria.html", categorias = query)
