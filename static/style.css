@@ -43,6 +43,14 @@
     background-repeat: no-repeat;
     padding-left: 40px;
   }
+
+  .nav-icon{
+    width: 25px;
+    height: 25px;
+    padding-top: 12%;
+    background-position: 10px 23px;
+    background-repeat: no-repeat;
+  }
   
   .site-footer {
     background-color: #B2A4FF;

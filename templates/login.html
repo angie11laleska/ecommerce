@@ -6,7 +6,7 @@
 {% block main %}
 <br></br>
 <div class="container">
-<form class="row g-3 needs-validation" novalidate>
+<form class="row g-3 needs-validation" method="POST" action="/login">
     <div class="col-md-3">
       <label for="validationCustom01" class="form-label">Nombre</label>
       <input name = "nombre" type="text" class="form-control" id="validationCustom01" value="" required>
@@ -24,7 +24,7 @@
     <div class="col-md-3">
       <label for="validationCustomUsername" class="form-label">Contraseña</label>
       <div class="input-group has-validation">
-        <input name = "contraseña" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
+        <input name = "contraseña" type="password" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
         <div class="invalid-feedback">
         Ingresa tu contraseña.
         </div>

@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
+from helpers import login_required
 
 load_dotenv()
 
@@ -31,6 +32,17 @@ def categorias():
 @app.route("/emprendimiento", methods=["GET", "POST"])
 def trending():
     return render_template("emprendimiento.html")
+
+@app.route("/carrito", methods=["GET", "POST"])
+@login_required
+def carrito():
+    """Carrito"""
+    if request.method == "POST":
+        session["carrito"] = []
+        id = request.form.get("id_persona")
+        session["carrito"].append(id)
+        return redirect("/carrito")
+    
 
 @app.route("/registrarse", methods=["GET", "POST"])
 def registrarse():
@@ -115,3 +127,13 @@ def login():
     # User reached route via GET (as by clicking a link or via redirect)
     else:
         return render_template("login.html")
+    
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
