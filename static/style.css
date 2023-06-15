@@ -44,12 +44,13 @@
     padding-left: 40px;
   }
 
-  .nav-icon{
-    width: 25px;
-    height: 25px;
-    padding-top: 12%;
-    background-position: 10px 23px;
+  .nav-icon {
+    background-image: url('/static/sale.png');
+    background-position: 20px 43px;
     background-repeat: no-repeat;
+    width: 38px; /* Ajusta el ancho del icono según tus necesidades */
+    height: 18px; /* Ajusta la altura del icono según tus necesidades */
+    padding-left: 20px; /* Ajusta el relleno (padding) según tus necesidades */
   }
   
   .site-footer {
