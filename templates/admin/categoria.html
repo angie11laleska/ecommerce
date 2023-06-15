@@ -27,21 +27,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            {% if categorias %}
+                        {% if categorias %}
                                 {% for categoria in categorias %}
-                                    <th>{{categoria.id_categoria}}</th>
-                                    <th>{{categoria.nombre_categoria}}</th>
-                                    <th>
-                                        <a href="#" class="btn btn-primary"> Editar</a>
-                                        <a href="#" class="btn btn-danger"> Eliminar</a>
-                                    </th>
+                                    <tr>
+                                        <th>{{categoria.id_categoria}}</th>
+                                        <th>{{categoria.nombre_categoria}}</th>
+                                        <th>
+                                            <a href="#" class="btn btn-primary"> Editar</a>
+                                            <a href="/admin/categoria/{{categoria.id_categoria}}" class="btn btn-danger"> Eliminar</a>
+                                        </th>
+                                    </tr>
                                 {% endfor %}
                             {%else %}
 
                                <h1>no hay categoria</h1>
                             {%endif%}
-                        </tr>
                         
                     </tbody>
                 </table>

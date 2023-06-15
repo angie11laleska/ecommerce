@@ -182,7 +182,15 @@ def catadmin():
     if request.method == "POST":
         nombre = request.form.get("nombre")
         query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre_persona":nombre})
+        db.execute(query, {"nombre":nombre})
         db.commit()
         redirect("/admin/categoria")
+
+    query = db.execute(text("select * from categoria"))
     return render_template("admin/categoria.html", categorias = query)
+
+@app.route("/admin/categoria/<int:id>" , methods=["GET"])
+def eliminarcate(id):
+    db.execute(text("delete from categoria where id= :id"))
+    db.commit()
+    return render_template("admin/categoria.html")
