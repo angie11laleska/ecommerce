@@ -1,9 +1,11 @@
+/*NAVBAR*/
 #NAVBAR{
     background-color:  #B2A4FF;
     line-height: 3;
   }
   .container form{
     background-color: #ede1eb;
+    margin-bottom: 5%;
   }
   .dropdown-menu{
     background-color: #BFACE2;
@@ -53,6 +55,11 @@
     padding-left: 20px; 
   }
   
+ /*REGISTRO*/
+ #botonS{
+  margin-left: 45%;
+ }
+  /*FOOTER*/
   .site-footer {
     background-color: #B2A4FF;
     padding: 45px 0 20px;
@@ -110,3 +117,5 @@
   .footer-links.inline li {
     display: inline-block
   }
+  /*PAGINA reg*/
+  
