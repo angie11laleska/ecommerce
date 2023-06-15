@@ -39,6 +39,22 @@
     background-repeat: no-repeat;
     padding-left: 40px;
   }
+  input[type=search] {
+    background-image: url('/static/search.svg');
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    padding-left: 40px;
+  }
+
+  .nav-icon {
+    background-image: url('/static/sale.png');
+    background-position: 20px 43px;
+    background-repeat: no-repeat;
+    width: 38px; 
+    height: 18px; 
+    padding-left: 20px; 
+  }
+  
  /*REGISTRO*/
  #botonS{
   margin-left: 45%;

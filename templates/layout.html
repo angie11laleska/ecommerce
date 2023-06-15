@@ -18,17 +18,37 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" id="prin" href="#">Principal</a>
+            <a class="nav-link" id="prin" href="#" onclick="main()">Principal</a>
+            <script>
+              function main()
+              {
+                window.location.href="/principal"
+              }
+            </script>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Ropa
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Camisa</a></li>
-              <li><a class="dropdown-item" href="#">Pantalon</a></li>
-              <li><a class="dropdown-item" href="#">Vestidos</a></li>
-              <li><a class="dropdown-item" href="#">Shorts</a></li>
+              <li><a class="dropdown-item" href="emprendimiento">Camisa</a></li>
+              <li><a class="dropdown-item" href="emprendimiento">Pantalon</a></li>
+              <li><a class="dropdown-item" href="emprendimiento">Vestidos</a></li>
+              <li><a class="dropdown-item" href="emprendimiento">Shorts</a></li>
+
+              <script>
+                var dropdownItems = document.getElementsByClassName("dropdown-item");
+                for (var i = 0; i < dropdownItems.length; i++) {
+                // Agregar un evento de clic a cada elemento del menú
+                dropdownItems[i].addEventListener("click", function() {
+                  // Obtener la URL de la página de destino del elemento clicado
+                var destinationURL = this.getAttribute("href");
+      
+                 // Redireccionar a la página de destino
+                window.location.href = destinationURL;
+                });
+              }
+              </script>
             </ul>
             <li class="nav-item dropdown">
               <a id="" class="nav-link dropdown-toggle" id="cat" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,6 +69,19 @@
                   <li><a class="dropdown-item" href="#">Cadenas</a></li>
                   <li><a class="dropdown-item" href="#">Carteras</a></li>
                   <li><a class="dropdown-item" href="#">Aretes</a></li>
+                  <script>
+                    var dropdownItems = document.getElementsByClassName("dropdown-item");
+                    for (var i = 0; i < dropdownItems.length; i++) {
+                    // Agregar un evento de clic a cada elemento del menú
+                    dropdownItems[i].addEventListener("click", function() {
+                      // Obtener la URL de la página de destino del elemento clicado
+                    var destinationURL = this.getAttribute("href");
+          
+                     // Redireccionar a la página de destino
+                    window.location.href = destinationURL;
+                    });
+                  }
+                  </script>
                 </ul>
                 <li class="nav-item dropdown">
                   <a id="" class="nav-link dropdown-toggle" id="cat" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -57,34 +90,53 @@
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Maquillaje</a></li>
                     <li><a class="dropdown-item" href="#">Productos para la piel</a></li>
+                    <script>
+                      var dropdownItems = document.getElementsByClassName("dropdown-item");
+                      for (var i = 0; i < dropdownItems.length; i++) {
+                      // Agregar un evento de clic a cada elemento del menú
+                      dropdownItems[i].addEventListener("click", function() {
+                        // Obtener la URL de la página de destino del elemento clicado
+                      var destinationURL = this.getAttribute("href");
+            
+                       // Redireccionar a la página de destino
+                      window.location.href = destinationURL;
+                      });
+                    }
+                    </script>
                   </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="trend" href="#">Emprendimientos</a>
+            <a class="nav-link" id="trend" href="#" onclick="emprendimiento()">Emprendimientos</a>
+            <script>
+              function emprendimiento()
+              {
+                window.location.href = "/emprendimiento"
+              }
+            </script>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="registro" href="#">Registrarse</a>
+            <a class="nav-link" id="registro" href="#" onclick="registrarse()">Registrarse</a>
+            <script>
+              function registrarse()
+              {
+                window.location.href = "/registrarse";
+              }
+              </script>
+          </li>
+          <li class="nav-item">
+            <img class="nav-icon" src="static/sale.png">
+            <a class="nav-link" id:"registro" href="#" onclick="comprar()" style="display: inline">Comprar</a>
+            <script>
+              function comprar()
+              {
+                window.location.href = "/emprendimiento";
+              }
+            </script>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-
-  {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-   
-    {% for category, message in messages %}
-      
-      <div class="alert {{ category }} alert-dismissible fade show" role="alert">
-        <strong>{{ message }}!</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-
-    {% endfor %}
-  
-  {% endif %}
-{% endwith %}
-
     <main id="main">
         {% block main %}{% endblock %}
     </main>
