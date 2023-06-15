@@ -60,7 +60,7 @@ def main ():
         apellido_persona TEXT NOT NULL,
         usuario TEXT NOT NULL,
         celular INTEGER NOT NULL,
-        contraseña VARCHAR(8),
+        contraseña VARCHAR,
         direccion TEXT,
         roles BOOLEAN NOT NULL
     )"""
