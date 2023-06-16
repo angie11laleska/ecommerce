@@ -63,7 +63,7 @@ def registrarse():
         departamento = request.form.get("departamento")
         if not nombre:
             print("Paso por Aca 1")
-            flash('Ingrese su nombre', 'alert-warning')
+            flash('Ingrese su nombre', 'error')
             return redirect("/registrarse")
         if not apellido:
             print("Paso por Aca 2")
@@ -212,6 +212,39 @@ def editarcate(id_categoria):
     query = db.execute(text("select * from categoria"))
     return render_template("/admin/editcategoria.html", id_categoria = int(id_categoria), categorias = query)
 
-@app.route("/admin/emprende")
+@app.route("/admin/emprender", methods=["GET", "POST"])
 def emprendimientos():
-    return
+    print('Paso por aca')
+    if request.method == "POST":
+        print('Paso por aca 2')
+        nombreE = request.form.get("nombreE")
+        redS = request.form.get("redS")
+        phone = request.form.get("phone")
+        idpersona = request.form.get("personaN")
+        if not nombreE:
+            print('Paso por aca 3')
+            flash('Ingrese el nombre del emprendimiento', 'alert-warning')
+            return redirect("/admin/emprender")
+        if not redS:
+            flash('Ingrese el usuario de su red social', 'alert-warning')
+            return redirect("/admin/emprender")
+        if not phone:
+            flash('Ingrese el numero de su celular', 'alert-warning')
+            return redirect("/admin/emprender")
+        if not idpersona:
+            flash('Seleccione una opcion', 'alert-warning')
+            return redirect("/admin/emprender")
+        # try:
+        #     query = text("""INSERT INTO emprendimiento( id_persona, nombre_emp, user_redsocial, celular_emp) 
+        #                     VALUES (:idpersona,:nombreE,:redS,:phone) 
+        #                     """)
+        #     params = {"idpersona":idpersona,"nombreE":nombreE,"redS":redS,"phone":phone}
+        #     db.execute(query,params)
+        #     db.commit()
+        # except OperationalError:
+        #     print("Error connecting to the database :/")
+        return redirect("admin/emprender")
+        
+    query = db.execute( text("select id_persona, nombre_persona from persona"))
+    
+    return render_template("admin/emprender.html", personas=query)

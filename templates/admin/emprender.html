@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Categoria
+{% endblock %}
+
+{% block main %}
+
+<div class="formulario">
+    <form action="/admin/emprender" method="post">
+        <input type="text" name="nombreE" id="" placeholder="Nombre Emprendimiento" class="form-control mt-3">
+        <input type="text" name="redS" id="" placeholder="Usuario de redSocial" class="form-control mt-3">
+        <input type="number" name="phone" id="" placeholder="Celular" class="form-control mt-3"> <br>
+        <select class="form-select" aria-label="Default select example" name="personaN">
+            <option selected>Selecciona una opcion:</option>
+            {% for persona in personas %}
+                <option value="{{persona.id_persona}}">{{persona.nombre_persona}}</option>
+            {% endfor %}
+          </select> <br>
+        <input type="submit" value="Guardar" class="btn btn-success" style="align-items: center;">
+    </form>
+</div>
+{% endblock %}
