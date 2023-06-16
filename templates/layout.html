@@ -113,34 +113,36 @@
                 window.location.href = "/emprendimiento"
               }
             </script>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" id="registro" href="#" onclick="registrarse()">Registrarse</a>
-            <script>
-              function registrarse()
-              {
-                window.location.href = "/registrarse";
-              }
-              </script>
-          </li>
           <li class="nav-item" style="margin-top: 7.5px;">
             <img class="nav-icon" src="static/sale.png">
-            <a class="nav-link" id:"registro" href="#" onclick="comprar()" style="display: inline;">Comprar</a>
+            <a class="nav-link" id:"compra" href="#" onclick="comprar()" style="display: inline;">Comprar</a>
             <script>
               function comprar()
               {
                 window.location.href = "/emprendimiento";
               }
             </script>
-          </li>
-        </ul>
+            <div class="d-flex">
+            <ul class="pagination">
+              <div class="d-flex justify-content-end">
+                <li class="page-item">
+                  <a class="page-link" id: "login" href="/login">Login</a>
+                </li>
+                <li class="page-item">
+                  <a class="page-link" id:"register" href="/registrarse">Register</a>
+                </li>
+              </ul>
+            </nav>
+          </ul>
+        </div>
+        </div>
       </div>
     </div>
   </nav>
-    <main id="main">
-        {% block main %}{% endblock %}
-    </main>
-
+  <main id="main">
+    {% block main %}{% endblock %}
+  </main>
+  
     <footer class="site-footer">
         <div class="container">
           <div class="row">
