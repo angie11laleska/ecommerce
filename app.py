@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import load_dotenv
@@ -34,7 +34,7 @@ def categorias():
 
 
 @app.route("/emprendimiento", methods=["GET", "POST"])
-def trending():
+def emprendimiento():
     return render_template("emprendimiento.html")
 
 @app.route("/carrito", methods=["GET", "POST"])
@@ -182,7 +182,36 @@ def catadmin():
     if request.method == "POST":
         nombre = request.form.get("nombre")
         query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre_persona":nombre})
+        db.execute(query, {"nombre":nombre})
         db.commit()
         redirect("/admin/categoria")
+
+    query = db.execute(text("select * from categoria"))
     return render_template("admin/categoria.html", categorias = query)
+
+@app.route("/admin/categoria/eliminar/<int:id_categoria>" , methods=["GET"])
+def eliminarcate(id_categoria):
+    query = (text("delete from categoria where id_categoria= (:id)"))
+    db.execute(query,{"id":id_categoria})
+    db.commit()
+    return redirect("/admin/categoria")
+
+@app.route("/admin/categoria/editar/<int:id_categoria>" , methods=["GET","POST"])
+def editarcate(id_categoria):
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        idhidden = request.form.get("id_categoria")
+        query = (text("UPDATE categoria SET nombre_categoria = (:nombre) WHERE id_categoria = (:idhidden);"))
+        db.execute(query,{"idhidden":idhidden, "nombre":nombre})
+        db.commit()
+       
+        return redirect("/admin/categoria")
+
+    # query = db.execute(text("select * from categoria"))
+    # db.commit()
+    query = db.execute(text("select * from categoria"))
+    return render_template("/admin/editcategoria.html", id_categoria = int(id_categoria), categorias = query)
+
+@app.route("/admin/emprende")
+def emprendimientos():
+    return
