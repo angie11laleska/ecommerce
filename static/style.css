@@ -61,7 +61,7 @@
  }
 
  #inicio{
-  margin-left: 45%;
+  margin-left: 3%;
  }
   /*FOOTER*/
   .site-footer {
@@ -122,4 +122,9 @@
     display: inline-block
   }
   /*PAGINA reg*/
-  
+  .touch #viewport {
+    min-height: 100%;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
