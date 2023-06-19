@@ -19,13 +19,15 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 @app.route("/")
 @login_required
 def index():
-    flash('Este es el index', 'alert-success')
-    return render_template("layout.html")
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    flash('Este es el index', 'success')
+    return render_template("index.html", navcat= query1)
 
-
-@app.route("/principal", methods=["GET", "POST"])
-def principal():
-    return render_template("principal.html")
 
 
 @app.route("/categorias", methods=["GET", "POST"])
@@ -181,13 +183,66 @@ def logout():
 def catadmin():
     if request.method == "POST":
         nombre = request.form.get("nombre")
-        query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre":nombre})
-        db.commit()
-        redirect("/admin/categoria")
+        catPadre = request.form.get("catPadre")
+        if catPadre:
+            catPadre = catPadre
+            query = text("INSERT INTO categoria(nombre_categoria, padre_id) VALUES (:nombre,:catPadre)")
+            db.execute(query, {"nombre":nombre, "catPadre":catPadre})
+            db.commit()
+            redirect("/admin/categoria")
+        else:
+            query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
+            db.execute(query, {"nombre":nombre})
+            db.commit()
+            redirect("/admin/categoria")
 
-    query = db.execute(text("select * from categoria"))
-    return render_template("admin/categoria.html", categorias = query)
+    # query = db.execute(text("select * from categoria"))
+    query = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    query2 = db.execute(text("select * from categoria")).fetchall()
+    print(f"Esto es categoria2 {query2}")
+    return render_template("admin/categoria.html", categorias = query, cat_padre= query2)
+
+
+@app.route("/admin/categoria/editar/<int:id_categoria>" , methods=["GET","POST"])
+def editarcate(id_categoria):
+    if request.method == "POST":
+        idhidden = request.form.get("id_categoria")
+        nombre = request.form.get("nombre")
+        catPadre = request.form.get("catPadre")
+        if catPadre:
+
+            query = (text("UPDATE categoria SET nombre_categoria = :nombre, padre_id = :padre_id WHERE id_categoria = (:idhidden);"))
+            db.execute(query,{"idhidden":idhidden, "nombre":nombre,"padre_id":catPadre})
+            print("categoria padre")
+        else:
+            query = (text("UPDATE categoria SET nombre_categoria = :nombre WHERE id_categoria = (:idhidden);"))
+            db.execute(query,{"idhidden":idhidden, "nombre":nombre})
+            print("categoria hijo")
+            
+        db.commit()
+       
+        return redirect("/admin/categoria")
+
+    # query = db.execute(text("select * from categoria"))
+    # db.commit()
+    query = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    query2 = db.execute(text("select * from categoria")).fetchall()
+    
+    query3 = text("SELECT nombre_categoria, padre_id FROM categoria WHERE id_categoria = :id_categoria")
+    formulario = db.execute(query3,{"id_categoria":id_categoria}).fetchone()
+    
+    print(f"Esto es categoria2 {query2}")
+    return render_template("/admin/editcategoria.html", id_categoria = int(id_categoria), categorias = query, cat_padre= query2, formulario = formulario)
 
 @app.route("/admin/categoria/eliminar/<int:id_categoria>" , methods=["GET"])
 def eliminarcate(id_categoria):
@@ -195,22 +250,6 @@ def eliminarcate(id_categoria):
     db.execute(query,{"id":id_categoria})
     db.commit()
     return redirect("/admin/categoria")
-
-@app.route("/admin/categoria/editar/<int:id_categoria>" , methods=["GET","POST"])
-def editarcate(id_categoria):
-    if request.method == "POST":
-        nombre = request.form.get("nombre")
-        idhidden = request.form.get("id_categoria")
-        query = (text("UPDATE categoria SET nombre_categoria = (:nombre) WHERE id_categoria = (:idhidden);"))
-        db.execute(query,{"idhidden":idhidden, "nombre":nombre})
-        db.commit()
-       
-        return redirect("/admin/categoria")
-
-    # query = db.execute(text("select * from categoria"))
-    # db.commit()
-    query = db.execute(text("select * from categoria"))
-    return render_template("/admin/editcategoria.html", id_categoria = int(id_categoria), categorias = query)
 
 @app.route("/admin/emprender", methods=["GET", "POST"])
 def emprendimientos():
@@ -221,28 +260,33 @@ def emprendimientos():
         redS = request.form.get("redS")
         phone = request.form.get("phone")
         idpersona = request.form.get("personaN")
+        direccion = request.form.get("direccion")
+    
         if not nombreE:
             print('Paso por aca 3')
-            flash('Ingrese el nombre del emprendimiento', 'alert-warning')
+            flash('Ingrese el nombre del emprendimiento', 'warning')
             return redirect("/admin/emprender")
         if not redS:
-            flash('Ingrese el usuario de su red social', 'alert-warning')
+            flash('Ingrese el usuario de su red social', 'warning')
             return redirect("/admin/emprender")
         if not phone:
-            flash('Ingrese el numero de su celular', 'alert-warning')
+            flash('Ingrese el numero de su celular', 'warning')
+            return redirect("/admin/emprender")
+        if not direccion:
+            flash("Ingrese su direccion", 'warning')
             return redirect("/admin/emprender")
         if not idpersona:
-            flash('Seleccione una opcion', 'alert-warning')
+            flash('Seleccione una opcion', 'warning')
             return redirect("/admin/emprender")
-        # try:
-        #     query = text("""INSERT INTO emprendimiento( id_persona, nombre_emp, user_redsocial, celular_emp) 
-        #                     VALUES (:idpersona,:nombreE,:redS,:phone) 
-        #                     """)
-        #     params = {"idpersona":idpersona,"nombreE":nombreE,"redS":redS,"phone":phone}
-        #     db.execute(query,params)
-        #     db.commit()
-        # except OperationalError:
-        #     print("Error connecting to the database :/")
+        try:
+             query = text("""INSERT INTO emprendimiento( id_persona, nombre_emp, direccion_emp, user_redsocial, celular_emp) 
+                             VALUES (:idpersona,:nombreE, :direccion, :redS,:phone) 
+                             """)
+             params = {"idpersona":idpersona,"nombreE":nombreE, "direccion": direccion, "redS":redS,"phone":phone}
+             db.execute(query,params)
+             db.commit()
+        except OperationalError:
+             print("Error connecting to the database :/")
         return redirect("admin/emprender")
         
     query = db.execute( text("select id_persona, nombre_persona from persona"))

@@ -3,11 +3,6 @@
     Login
 {% endblock %}
 {% block main %}
-<br></br>
-</div>
-<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-  <form class="row g-3 needs-validation" novalidate method="POST" action="/login">
-    <div class="col-md-6 offset-md-3">
 <div class="container d-flex justify-content-center align-items-center">
   <form class="row g-3 needs-validation" novalidate method="POST" action="/login">
     <div class="col-md-3">
@@ -17,7 +12,7 @@
         ¡Muy bien!
       </div>
     </div>
-    <div class="col-md-6 offset-md-3">
+    <div class="col-md-3">
       <label for="validationCustomUsername" class="form-label">Contraseña</label>
       <div class="input-group has-validation">
         <input name="contraseña" type="password" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required>
@@ -25,9 +20,6 @@
           Ingresa tu contraseña.
         </div>
       </div>
-      <button class="btn btn-light" type="submit" id="inicio">Iniciar Sesión</button>
-    </div>
-    <div class="col-12 text-center">
       <button class="btn btn-light" type="submit" id="inicio">Iniciar Sesión</button>
     </div>
   </form>

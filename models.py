@@ -14,8 +14,10 @@ def main ():
     id_emp SERIAL PRIMARY KEY,
     id_persona INTEGER REFERENCES persona (id_persona),
     nombre_emp TEXT NOT NULL,
+    direccion_emp TEXT NOT NULL,
     user_redSocial TEXT NOT NULL,
-    celular_emp INTEGER NOT NULL
+    celular_emp INTEGER NOT NULL,
+    estado Boolean NOT NULL DEFAULT TRUE
         )"""
     )
 
@@ -24,16 +26,27 @@ def main ():
         id_producto SERIAL PRIMARY KEY,
         id_categoria INTEGER REFERENCES categoria (id_categoria),
         nombreProducto VARCHAR(50),
-        imagen BYTEA,
         cant_producto INTEGER,
         precioProducto NUMERIC,
-        descripción TEXT
+        descripción TEXT,
+        estado Boolean NOT NULL DEFAULT TRUE
+        )"""
+    )
+
+    imagen = text("""CREATE TABLE IF NOT EXISTS imagen (
+        id_imagen SERIAL PRIMARY KEY,
+        id_producto INTEGER REFERENCES producto (id_producto),
+        img_url VARCHAR,
+        estado Boolean NOT NULL DEFAULT TRUE
         )"""
     )
 
     categoria = text ("""CREATE TABLE IF NOT EXISTS categoria (
         id_categoria SERIAL PRIMARY KEY,
-        nombre_categoria TEXT NOT NULL
+        nombre_categoria TEXT NOT NULL,
+        padre_id INT NULL,
+        FOREIGN KEY (padre_id) REFERENCES Categoria(id_categoria) ON DELETE CASCADE,
+        estado Boolean NOT NULL DEFAULT TRUE
     )"""
     )
 
@@ -43,14 +56,16 @@ def main ():
         id_prod INTEGER REFERENCES producto (id_producto),
         cant_prod INTEGER,
         precio_total NUMERIC,
-        verified BOOLEAN NOT NULL
+        verified BOOLEAN NOT NULL,
+        estado Boolean NOT NULL DEFAULT TRUE
     )"""
     )
 
     repartidor = text ("""CREATE TABLE IF NOT EXISTS repartidor (
         id_repartidor SERIAL PRIMARY KEY,
         nombre_rep TEXT NOT NULL,
-        id_pedido INTEGER REFERENCES pedido (id_pedido)
+        id_pedido INTEGER REFERENCES pedido (id_pedido),
+        estado Boolean NOT NULL DEFAULT TRUE
     )"""
     )
 
@@ -62,7 +77,9 @@ def main ():
         celular INTEGER NOT NULL,
         contraseña VARCHAR,
         direccion TEXT,
-        roles BOOLEAN NOT NULL
+        roles BOOLEAN NOT NULL,
+        departamento VARCHAR,
+        estado Boolean NOT NULL DEFAULT TRUE
     )"""
     )
 
@@ -70,21 +87,17 @@ def main ():
         id_entrega SERIAL PRIMARY KEY,
         id_pedido INTEGER REFERENCES pedido (id_pedido),
         fecha TIMESTAMP,
-        id_repartidor INTEGER REFERENCES repartidor (id_repartidor)
+        id_repartidor INTEGER REFERENCES repartidor (id_repartidor),
+        estado Boolean NOT NULL DEFAULT TRUE
     )"""
     )
 
-    imagen = text("""CREATE TABLE IF NOT EXISTS imagen (
-        id_imagen SERIAL PRIMARY KEY,
-        id_producto INTEGER REFERENCES producto (id_producto),
-        img_url BYTEA
-    )"""
-    )
 
     roles = text("""
         CREATE TABLE roles (
             id SERIAL PRIMARY KEY,
-            nombre VARCHAR(50) NOT NULL
+            nombre VARCHAR(50) NOT NULL,
+            estado Boolean NOT NULL DEFAULT TRUE
         )
     """)
     
