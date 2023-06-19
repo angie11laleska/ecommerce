@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Roles
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="formulario">
+                <form action="/admin/roles" method="post">
+                    <input type="text" name="nombre" id="" placeholder="Nombre rol" class="form-control mt-3"> <br>
+                    <input type="submit" value="Guardar" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="cat-info">
+                <table class="table table-snipped">
+                    <thead>
+                        <tr class="text-center">
+                            <th>id</th>
+                            <th>Admin</th>
+                            <th>Usuario</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if categorias %}
+                                {% for categoria in categorias %}
+                                    <tr class="text-center">
+                                        <th>{{categoria.id_categoria}}</th>
+                                        <th>{{categoria.nombre_categoria}}</th>
+                                        {% if categoria.cat_padre == None %}
+                                        <th><i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i></i></th>
+                                        {%else %}
+                                            <th>{{categoria.cat_padre}}</th>
+                                        {%endif%}
+                                        <th>
+                                            <a href="/admin/categoria/editar/{{categoria.id_categoria}}" class="btn btn-primary"> Editar</a>
+                                            <a href="/admin/categoria/eliminar/{{categoria.id_categoria}}" class="btn btn-danger"> Eliminar</a>
+                                        </th>
+                                    </tr>
+                                {% endfor %}
+                            {%else %}
+
+                               <h1>no hay categoria</h1>
+                            {%endif%}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock %}
