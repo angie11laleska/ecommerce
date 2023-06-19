@@ -11,7 +11,7 @@
         <div class="col-4">
             <div class="formulario">
                 <form action="/admin/roles" method="post">
-                    <input type="text" name="nombre" id="" placeholder="Nombre rol" class="form-control mt-3"> <br>
+                    <input type="text" name="nombre" id="" placeholder="Nombre Roles" class="form-control mt-3"> <br>
                     <input type="submit" value="Guardar" class="btn btn-success">
                 </form>
             </div>
@@ -22,32 +22,35 @@
                     <thead>
                         <tr class="text-center">
                             <th>id</th>
-                            <th>Admin</th>
-                            <th>Usuario</th>
+                            <th>Rol</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% if categorias %}
-                                {% for categoria in categorias %}
+                        {% if roles %}
+                                {% for rol in roles %}
                                     <tr class="text-center">
-                                        <th>{{categoria.id_categoria}}</th>
-                                        <th>{{categoria.nombre_categoria}}</th>
-                                        {% if categoria.cat_padre == None %}
-                                        <th><i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i></i></th>
-                                        {%else %}
-                                            <th>{{categoria.cat_padre}}</th>
+                                        <th>{{rol.id}}</th>
+                                        {% if rol.nombre == 'Admin'%}
+                                            <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{rol.nombre}} </th>
+                                        {%else%}
+                                            <th>{{rol.nombre}}</th>
                                         {%endif%}
+                                    
+                                        
                                         <th>
-                                            <a href="/admin/categoria/editar/{{categoria.id_categoria}}" class="btn btn-primary"> Editar</a>
-                                            <a href="/admin/categoria/eliminar/{{categoria.id_categoria}}" class="btn btn-danger"> Eliminar</a>
+                                            <a href="/admin/categoria/editar/" class="btn btn-primary"> Editar</a>
+                                            <a href="/admin/categoria/eliminar/" class="btn btn-danger"> Eliminar</a>
                                         </th>
                                     </tr>
                                 {% endfor %}
-                            {%else %}
-
-                               <h1>no hay categoria</h1>
-                            {%endif%}
+                        {%else %}
+                            <tr>
+                                <td>
+                                    No hay roles registrados
+                                </td>
+                            </tr>
+                        {%endif%}
                         
                     </tbody>
                 </table>

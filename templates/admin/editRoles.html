@@ -12,23 +12,7 @@
             <div class="formulario">
                 <form action="/admin/roles/editar/{{id_roles}}" method="post">
                     <input type="hidden" name="id_roles" value="{{id_roles}}">
-                    <input type="text" name="nombre" id="" placeholder="Nombre Rol" class="form-control mt-3" value="{{formulario.nombre_roles}}"> <br>
-                    {% if cat_padre %}
-                        <div class="col-md">
-                            <label for="validationCustom04" class="form-label">Seleccione si la categoria pertenese a una categoria padre</label>
-                            <select name="catPadre" class="form-select" id="validationCustom04" >
-                            <option selected disabled value="">Elige...</option>
-                            <option value=""><strong>Categoria Padre</strong></option>
-                            {%for categoria in cat_padre %}
-                                <option value="{{categoria.id_categoria}}">{{categoria.nombre_categoria}}</option>
-                            {%endfor%}
-                            </select>
-                            <div class="invalid-feedback">
-                            Selecciona un departamento.
-                            </div>
-                        </div>
-                      {% endif %}
-                      <br>
+                    <input type="text" name="nombre" id="" placeholder="Nombre Rol" class="form-control mt-3" value="{{formulario.nombre_roles}}"> <br>0
                     <input type="submit" value="Guardar" class="btn btn-success">
                 </form>
             </div>
@@ -39,8 +23,8 @@
                     <thead>
                         <tr class=" text-center">
                             <th>id</th>
-                            <th>Categoria</th>
-                            <th>Cat pdre</th>
+                            <th>Admin</th>
+                            <th>Usuario</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -71,6 +55,4 @@
         </div>
     </div>
 </div>
-
 {%endblock %}
-admin, usuario,

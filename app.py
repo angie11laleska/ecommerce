@@ -35,6 +35,7 @@ def categorias():
     return render_template("categorias.html")
 
 
+
 @app.route("/emprendimiento", methods=["GET", "POST"])
 def emprendimiento():
     return render_template("emprendimiento.html")
@@ -292,3 +293,18 @@ def emprendimientos():
     query = db.execute( text("select id_persona, nombre_persona from persona"))
     
     return render_template("admin/emprender.html", personas=query)
+
+@app.route("/admin/roles", methods=["GET", "POST"])
+def roles():
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        if nombre:
+            query = text("INSERT INTO roles(nombre) VALUES (:nombre)")
+            db.execute(query, {"nombre":nombre})
+            db.commit()
+            redirect("/admin/categoria")
+        else:
+            flash("Ingrese un rol", "warning")
+    query2 = db.execute(text("select * from roles")).fetchall() 
+    return render_template("admin/roles.html", roles = query2)
+    
