@@ -39,6 +39,11 @@
     background-repeat: no-repeat;
     padding-left: 40px;
   }
+
+  #button { 
+    float: right;
+  }
+
   input[type=search] {
     background-image: url('/static/search.svg');
     background-position: 10px 10px;
@@ -127,4 +132,14 @@
     overflow: hidden;
     position: relative;
     width: 100%;
+  }
+
+  #login{
+    margin-left: 45%;
+    padding-left: 40px
+  }
+
+  #register{
+    margin-left: 45%;
+    padding-left: 40px;
   }

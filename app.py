@@ -1,5 +1,5 @@
 import os
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, url_for
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import load_dotenv
@@ -34,7 +34,7 @@ def categorias():
 
 
 @app.route("/emprendimiento", methods=["GET", "POST"])
-def trending():
+def emprendimiento():
     return render_template("emprendimiento.html")
 
 @app.route("/carrito", methods=["GET", "POST"])
@@ -63,7 +63,7 @@ def registrarse():
         departamento = request.form.get("departamento")
         if not nombre:
             print("Paso por Aca 1")
-            flash('Ingrese su nombre', 'alert-warning')
+            flash('Ingrese su nombre', 'error')
             return redirect("/registrarse")
         if not apellido:
             print("Paso por Aca 2")
@@ -182,7 +182,69 @@ def catadmin():
     if request.method == "POST":
         nombre = request.form.get("nombre")
         query = text("INSERT INTO categoria(nombre_categoria) VALUES (:nombre)")
-        db.execute(query, {"nombre_persona":nombre})
+        db.execute(query, {"nombre":nombre})
         db.commit()
         redirect("/admin/categoria")
+
+    query = db.execute(text("select * from categoria"))
     return render_template("admin/categoria.html", categorias = query)
+
+@app.route("/admin/categoria/eliminar/<int:id_categoria>" , methods=["GET"])
+def eliminarcate(id_categoria):
+    query = (text("delete from categoria where id_categoria= (:id)"))
+    db.execute(query,{"id":id_categoria})
+    db.commit()
+    return redirect("/admin/categoria")
+
+@app.route("/admin/categoria/editar/<int:id_categoria>" , methods=["GET","POST"])
+def editarcate(id_categoria):
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        idhidden = request.form.get("id_categoria")
+        query = (text("UPDATE categoria SET nombre_categoria = (:nombre) WHERE id_categoria = (:idhidden);"))
+        db.execute(query,{"idhidden":idhidden, "nombre":nombre})
+        db.commit()
+       
+        return redirect("/admin/categoria")
+
+    # query = db.execute(text("select * from categoria"))
+    # db.commit()
+    query = db.execute(text("select * from categoria"))
+    return render_template("/admin/editcategoria.html", id_categoria = int(id_categoria), categorias = query)
+
+@app.route("/admin/emprender", methods=["GET", "POST"])
+def emprendimientos():
+    print('Paso por aca')
+    if request.method == "POST":
+        print('Paso por aca 2')
+        nombreE = request.form.get("nombreE")
+        redS = request.form.get("redS")
+        phone = request.form.get("phone")
+        idpersona = request.form.get("personaN")
+        if not nombreE:
+            print('Paso por aca 3')
+            flash('Ingrese el nombre del emprendimiento', 'alert-warning')
+            return redirect("/admin/emprender")
+        if not redS:
+            flash('Ingrese el usuario de su red social', 'alert-warning')
+            return redirect("/admin/emprender")
+        if not phone:
+            flash('Ingrese el numero de su celular', 'alert-warning')
+            return redirect("/admin/emprender")
+        if not idpersona:
+            flash('Seleccione una opcion', 'alert-warning')
+            return redirect("/admin/emprender")
+        # try:
+        #     query = text("""INSERT INTO emprendimiento( id_persona, nombre_emp, user_redsocial, celular_emp) 
+        #                     VALUES (:idpersona,:nombreE,:redS,:phone) 
+        #                     """)
+        #     params = {"idpersona":idpersona,"nombreE":nombreE,"redS":redS,"phone":phone}
+        #     db.execute(query,params)
+        #     db.commit()
+        # except OperationalError:
+        #     print("Error connecting to the database :/")
+        return redirect("admin/emprender")
+        
+    query = db.execute( text("select id_persona, nombre_persona from persona"))
+    
+    return render_template("admin/emprender.html", personas=query)
