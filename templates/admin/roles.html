@@ -31,6 +31,7 @@
                                 {% for rol in roles %}
                                     <tr class="text-center">
                                         <th>{{rol.id}}</th>
+                                        <th>{{rol.nombre}}</th>
                                         {% if rol.nombre == 'Admin'%}
                                             <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{rol.nombre}} </th>
                                         {%else%}
@@ -39,8 +40,8 @@
                                     
                                         
                                         <th>
-                                            <a href="/admin/categoria/editar/" class="btn btn-primary"> Editar</a>
-                                            <a href="/admin/categoria/eliminar/" class="btn btn-danger"> Eliminar</a>
+                                            <a href="/admin/roles/editar/{{rol.id}}" class="btn btn-primary"> Editar</a>
+                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger"> Eliminar</a>
                                         </th>
                                     </tr>
                                 {% endfor %}

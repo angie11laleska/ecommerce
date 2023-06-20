@@ -320,7 +320,7 @@ def editarRoles(id):
     formulario = db.execute(query3,{"id":id}).fetchone()
     
     print(f"Esto es categoria2 {query2}")
-    return render_template("/admin/editRoles.html", id = int(id), roles = query, formulario = formulario)
+    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario)
 
 @app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
 def eliminarRoles(id):
