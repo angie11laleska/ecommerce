@@ -143,8 +143,6 @@ def login():
         rows = text("SELECT * FROM persona WHERE usuario = :usuario")
         result = db.execute(rows, {"usuario":usuario, "contraseña": contraseña}).fetchone()
 
-      
-        
         print(result)
         # print(request.form.get("contraseña"))
         
@@ -170,14 +168,11 @@ def login():
 @app.route("/logout")
 def logout():
     """Log user out"""
-
     # Forget any user_id
     session.clear()
 
     # Redirect user to login form
     return redirect("/")
-
-
 
 # parte del admin
 @app.route("/admin/categoria" , methods=["GET", "POST"])
@@ -207,7 +202,6 @@ def catadmin():
     query2 = db.execute(text("select * from categoria")).fetchall()
     print(f"Esto es categoria2 {query2}")
     return render_template("admin/categoria.html", categorias = query, cat_padre= query2)
-
 
 @app.route("/admin/categoria/editar/<int:id_categoria>" , methods=["GET","POST"])
 def editarcate(id_categoria):
@@ -307,4 +301,31 @@ def roles():
             flash("Ingrese un rol", "warning")
     query2 = db.execute(text("select * from roles")).fetchall() 
     return render_template("admin/roles.html", roles = query2)
+
+@app.route("/admin/roles/editar/<int:id>" , methods=["GET","POST"])
+def editarRoles(id):
+    if request.method == "POST":
+        idhidden = request.form.get("id")
+        nombre = request.form.get("nombre")
+        if nombre:
+            query = (text("UPDATE roles SET nombre = :nombre WHERE id = (:idhidden);"))
+            db.execute(query,{"idhidden":idhidden, "nombre":nombre})
+            print("nombre")        
+        db.commit()  
+        return redirect("/admin/roles")
+    
+    query2 = db.execute(text("select * from roles")).fetchall()
+    
+    query3 = text("SELECT nombre FROM roles WHERE id = :id")
+    formulario = db.execute(query3,{"id":id}).fetchone()
+    
+    print(f"Esto es categoria2 {query2}")
+    return render_template("/admin/editRoles.html", id = int(id), roles = query, formulario = formulario)
+
+@app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
+def eliminarRoles(id):
+    query = (text("delete from roles where id= (:id)"))
+    db.execute(query,{"id":id})
+    db.commit()
+    return redirect("/admin/roles")
     

@@ -10,9 +10,9 @@
     <div class="row">
         <div class="col-4">
             <div class="formulario">
-                <form action="/admin/roles/editar/{{id_roles}}" method="post">
-                    <input type="hidden" name="id_roles" value="{{id_roles}}">
-                    <input type="text" name="nombre" id="" placeholder="Nombre Rol" class="form-control mt-3" value="{{formulario.nombre_roles}}"> <br>0
+                <form action="/admin/roles/editar/{{id}}" method="post">
+                    <input type="hidden" name="id" value="{{id}}">
+                    <input type="text" name="nombre" id="" placeholder="Nombre Rol" class="form-control mt-3" value="{{formulario.nombre}}"> <br>0
                     <input type="submit" value="Guardar" class="btn btn-success">
                 </form>
             </div>
@@ -29,24 +29,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% if categorias %}
-                                {% for categoria in categorias %}
+                        {% if roles %}
+                                {% for rol in roles %}
                                     <tr class="text-center">
-                                        <th>{{categoria.id_categoria}}</th>
-                                        <th>{{categoria.nombre_categoria}}</th>
-                                        {% if categoria.cat_padre == None %}
-                                        <th class="text-center"><i class="fa-solid fa-crown fa-beat " style="color: #fbf304;"></i></i></th>
+                                        <th>{{rol.id}}</th>
+                                        <th>{{rol.nombre}}</th>
+                                        {% if rol.nombre == 'Admin' %}
+                                        <th class="text-center"><i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i></i></th>
                                         {%else %}
-                                            <th>{{categoria.cat_padre}}</th>
+                                            <th>{{rol.nombre}}</th>
                                         {%endif%}
                                         <th>
-                                            <a href="/admin/categoria/eliminar/{{categoria.id_categoria}}" class="btn btn-danger"> Eliminar</a>
+                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger"> Eliminar</a>
                                         </th>
                                     </tr>
                                 {% endfor %}
                             {%else %}
 
-                               <h1>no hay categoria</h1>
+                               <h1>no hay roles</h1>
                             {%endif%}
                         
                     </tbody>
