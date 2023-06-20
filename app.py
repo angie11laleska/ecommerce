@@ -375,3 +375,18 @@ def eliminarRoles(id):
     return redirect("/admin/roles")
     
 # endroles
+
+#inicio repartidor
+@app.route("/admin/repartidor", methods=["GET", "POST"])
+def repartidor():
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        if nombre:
+            query = text("INSERT INTO roles(nombre) VALUES (:nombre)")
+            db.execute(query, {"nombre":nombre})
+            db.commit()
+            redirect("/admin/repartidor")
+        else:
+            flash("Ingrese un repartidor", "warning")
+    query2 = db.execute(text("select * from repartidor")).fetchall() 
+    return render_template("admin/repartidor.html", repartidor = query2)

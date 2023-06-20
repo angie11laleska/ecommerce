@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Repartidor
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="formulario">
+                <form action="/admin/repartidor" method="post">
+                    <input type="text" name="nombre" id="" placeholder="Nombre Repartidor" class="form-control mt-3"> <br>
+                    <input type="submit" value="Guardar" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="cat-info">
+                <table class="table table-snipped">
+                    <thead>
+                        <tr class="text-center">
+                            <th>id</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if repartidores %}
+                                {% for repartidor in repartidores %}
+                                    <tr class="text-center">
+                                        <th>{{repartidor.id}}</th>
+                                        <th>{{repartidor.nombre}}</th>
+                                        {% if repartidor.nombre == 'Admin'%}
+                                            <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{repartidor.nombre}} </th>
+                                        {%else%}
+                                            <th>{{repartidor.nombre}}</th>
+                                        {%endif%}
+                                    
+                                        
+                                        <th>
+                                            <a href="/admin/repartidor/editar/{{repartidor.id}}" class="btn btn-primary"> Editar</a>
+                                            <a href="/admin/repartidor/eliminar/{{repartidor.id}}" class="btn btn-danger"> Eliminar</a>
+                                        </th>
+                                    </tr>
+                                {% endfor %}
+                        {%else %}
+                            <tr>
+                                <td>
+                                    No hay repartidores registrados
+                                </td>
+                            </tr>
+                        {%endif%}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock %}
