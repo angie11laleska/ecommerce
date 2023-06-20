@@ -1,3 +1,4 @@
+
 {% extends "layout.html" %}
 
 {% block title %}
@@ -6,19 +7,53 @@
 
 {% block main %}
 
-<div class="formulario">
-    <form action="/admin/emprender" method="post">
-        <input type="text" name="nombreE" id="" placeholder="Nombre Emprendimiento" class="form-control mt-3">
-        <input type="text" name="redS" id="" placeholder="Usuario de redSocial" class="form-control mt-3">
-        <input type="number" name="phone" id="" placeholder="Celular" class="form-control mt-3"> <br>
-        <input type="text" name="direccion" id="" placeholder="Direccion" class="form-control mt-3"> <br>
-        <select class="form-select" aria-label="Default select example" name="personaN">
-            <option selected>Selecciona una opcion:</option>
-            {% for persona in personas %}
-                <option value="{{persona.id_persona}}">{{persona.nombre_persona}}</option>
-            {% endfor %}
-          </select> <br>
-        <input type="submit" value="Guardar" class="btn btn-success" style="align-items: center;">
-    </form>
-</div>
+<!-- Button trigger modal -->
+<table class="table table-responsive table-hover">
+    <thead>
+        <tr class="text-center">
+            <th>id</th>
+            <th>Emprendimiento</th>
+            <th>Direccion</th>
+            <th>Celular</th>  
+            <th>Propiedtario</th>  
+            <th>Estado</th>  
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if info %}
+                {% for i in info %}
+                    <tr class="text-center">
+                        <th>{{i.id_emp}}</th>
+                        <th>{{i.nombre_emp}}</th>
+                        <th>{{i.direccion_emp}}</th>
+                        <th>{{i.celular_emp}}</th>
+                        <th>{{i.nombre_persona}}</th>
+                        {% if i.estado == True %}
+                        <th>
+                            <span class="badge badge-success rounded-pill d-inline">Activo</span>
+                        </th>
+                        {%else%}
+                        <th>
+                            <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
+                        </th>
+                        {%endif%}
+        
+                        <th>
+                            <a href="/admin/emp/editar/{{i.id_emp}}" class="btn btn-primary"> Editar</a>
+                            <a href="/admin/emp/eliminar/{{i.id_emp}}" class="btn btn-danger"> Eliminar</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+            {%else %}
+
+               <h1>no hay categoria</h1>
+            {%endif%}
+        
+    </tbody>
+</table>
 {% endblock %}
+
+{% block modal%}
+    
+{% endblock%}
