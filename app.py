@@ -390,3 +390,30 @@ def repartidor():
             flash("Ingrese un repartidor", "warning")
     query2 = db.execute(text("select * from repartidor")).fetchall() 
     return render_template("admin/repartidor.html", repartidor = query2)
+
+@app.route("/admin/repartidor/editar/<int:id_repartidor>" , methods=["GET","POST"])
+def editarRep(id_repartidor):
+    if request.method == "POST":
+        idhidden = request.form.get("id_repartidor")
+        nombre = request.form.get("nombre")
+        if nombre:
+            query = (text("UPDATE roles SET nombre = :nombre WHERE id = (:idhidden);"))
+            db.execute(query,{"idhidden":idhidden, "nombre":nombre})
+            print("nombre")        
+        db.commit()  
+        return redirect("/admin/roles")
+    
+    query2 = db.execute(text("select * from roles")).fetchall()
+    
+    query3 = text("SELECT nombre FROM roles WHERE id = :id")
+    formulario = db.execute(query3,{"id":id}).fetchone()
+    print(f"Esto es categoria2 {query2}")
+    query = db.execute( text("select id_persona, nombre_persona from persona"))
+    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, roles = query2)
+
+@app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
+def eliminarRoles(id):
+    query = (text("delete from roles where id= (:id)"))
+    db.execute(query,{"id":id})
+    db.commit()
+    return redirect("/admin/roles")
