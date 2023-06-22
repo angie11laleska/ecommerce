@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Trending
+{% endblock %}
+{% block main %}
+
+<ul>
+    {%for i in resul %}
+    {{i}}
+    {%endfor%}
+</ul>
+
+{%endblock %}

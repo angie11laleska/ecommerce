@@ -481,3 +481,23 @@ def eliminarProd(id_producto):
     db.execute(query,{"id":id_producto, "estado":False})
     db.commit()
     return redirect("/misproductos")
+
+
+@app.route("/categoria/<nombreCat>", methods=["GET", "POST"])
+def infoCat(nombreCat):
+    query = (text("select id_producto, nombreproducto, cant_producto,precioproducto,descripción from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
+    resultad = db.execute(query,{"nombreCat":nombreCat}).fetchall()
+    print(resultad)
+    return render_template("listaProductos.html", resul=resultad)
+
+
+
+
+
+
+
+
+
+# @app.errorhandler(404)
+# def page_not_found(error):
+#     return render_template('page_not_found.html'), 404
