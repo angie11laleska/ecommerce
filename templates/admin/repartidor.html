@@ -30,9 +30,9 @@
                     </thead>
                     <tbod
                         {% if repartidor %}
-                                {% for r in rep %}
+                                {% for r in repartidor %}
                                     <tr class="text-center">
-                                        <th>{{r.id}}</th>
+                                        <th>{{r.id_repartidor}}</th>
                                         <th>{{r.nombre_rep}}</th>
                                         {% if r.nombre_rep == 'Admin'%}
                                             <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{r.nombre_rep}} </th>
