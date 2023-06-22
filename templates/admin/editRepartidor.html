@@ -11,8 +11,8 @@
         <div class="col-4">
             <div class="formulario">
                 <form action="/admin/repartidor/editar/{{id_repartidor}}" method="post">
-                    <input type="hidden" name="id" value="{{id_repartidor}}">
-                    <input type="text" name="nombre" id="" placeholder="Nombre Repartidor" class="form-control mt-3" value="{{formulario.nombre}}"> <br>0
+                    <input type="hidden" name="id_repartidor" value="{{id_repartidor}}">
+                    <input type="text" name="nombre" id="" placeholder="Nombre Repartidor" class="form-control mt-3" value="{{formulario.nombre_rep}}"> <br>
                     <input type="submit" value="Guardar" class="btn btn-success">
                 </form>
             </div>
@@ -31,14 +31,14 @@
                     </thead>
                     <tbody>
                         {% if repartidor %}
-                                {% for r in rep %}
+                                {% for r in repartidor %}
                                     <tr class="text-center">
-                                        <th>{{r.id}}</th>
-                                        <th>{{r.nombre}}</th>
-                                        {% if r.nombre == 'Admin' %}
+                                        <th>{{r.id_repartidor}}</th>
+                                        <th>{{r.nombre_rep}}</th>
+                                        {% if r.nombre_rep == 'Admin' %}
                                         <th class="text-center"><i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i></i></th>
                                         {%else %}
-                                            <th>{{r.nombre}}</th>
+                                            <th>{{r.nombre_rep}}</th>
                                         {%endif%}
                                         <th>
                                             <a href="/admin/repartidor/eliminar/{{r.id_repartidor}}" class="btn btn-danger"> Eliminar</a>
