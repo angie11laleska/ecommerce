@@ -417,3 +417,61 @@ def eliminarRep(id_repartidor):
     db.execute(query,{"id":id_repartidor, "estado":False})
     db.commit()
     return redirect("/admin/repartidor")
+
+#inicio de productos
+@app.route("/misproductos",methods=["GET","POST"])
+def misproductos():
+
+    query = text("""
+                    select producto.id_producto,producto.nombreproducto,producto.cant_producto, producto.precioproducto, categoria.nombre_categoria, producto.estado from producto inner join emprendimiento on producto.id_emp = emprendimiento.id_emp
+                    INNER JOIN persona on emprendimiento.id_persona = persona.id_persona inner join categoria on producto.id_categoria = categoria.id_categoria where persona.id_persona = :iduser""")
+    productos = db.execute(query, {"iduser":2})
+    print(productos)
+    return render_template("misproductos.html", productos = productos)
+
+@app.route("/addproducto",methods=["GET","POST"])
+def addproductos():
+
+    if request.method == "POST":
+        nombreprod = request.form.get("nombre")
+        cantidadprod = int(request.form.get("cantidad"))
+        precioprod = int(request.form.get("precio"))
+        descripcprod = request.form.get("descripcion")
+        idemp = request.form.get("idemp")
+        idcat = request.form.get("idcat")
+        print(f"Este es el id de emp {idemp}")
+        print(f"Este es el id de cat {idcat}")
+
+        if 'producto_image' in request.files:
+            file = request.files['producto_image']
+            # Si el usuario no selecciona un fichero, el navegador
+            # enviará una parte vacía sin nombre de fichero
+            if file.filename:
+                image_name = secure_filename(file.filename)
+                images_dir = current_app.config['POSTS_IMAGES_DIR']
+                os.makedirs(images_dir, exist_ok=True)
+                file_path = os.path.join(images_dir, image_name)
+                file.save(file_path)
+
+                print(f"Esta es la ruta de la imagen: {image_name}")
+
+        consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripción)
+                            values(:idemp,:idcat,:nombreprod,:cantprod,:precioprod,:descripc)""")
+        db.execute(consulta,{"idemp":idemp,"idcat":idcat,"nombreprod":nombreprod,"cantprod":cantidadprod,"precioprod":precioprod,"descripc":descripcprod})
+        # db.commit()
+        return redirect("/misproductos")
+
+    query = text("""select emprendimiento.id_emp, emprendimiento.nombre_emp from emprendimiento 
+                    inner join persona on emprendimiento.id_persona = persona.id_persona 
+                    where persona.id_persona = :idpersona""")
+    resultadoemp = db.execute(query,{"idpersona":session["user_id"]}).fetchall()
+    print(resultadoemp)
+
+    if resultadoemp == []:
+        flash("Debe de registrar un emprendimiento para poder publicar un producto", "danger")
+        return redirect("/")
+    
+    query2 = text("select * from categoria")
+    resultadocat = db.execute(query2).fetchall()
+
+    return render_template("addproducto.html", selectemp = resultadoemp, selectcat = resultadocat)
