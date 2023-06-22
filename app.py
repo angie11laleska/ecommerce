@@ -475,13 +475,44 @@ def addproductos():
 
     return render_template("addproducto.html", selectemp = resultadoemp, selectcat = resultadocat)
 
-@app.route("/admin/emp/editar/<int:id_producto>" , methods=["GET"])
+@app.route("/misproductos/eliminar/<int:id_producto>" , methods=["GET"])
 def eliminarProd(id_producto):
-    query = (text("delete from where id_repartidor= (:id)"))
+    query = (text("delete from producto where id_producto= (:id)"))
     db.execute(query,{"id":id_producto, "estado":False})
     db.commit()
     return redirect("/misproductos")
 
+@app.route("/misproductos/editar/<int:id_producto>", methods=["GET", "POST"])
+def producto_edit(id_producto):
+    if request.method == "POST":
+        idhidden = request.form.get("id_producto")
+        nombre = request.form.get("nombre")
+        cantidad = request.form.get("cantidad")
+        precio = request.form.get("precio")
+        descripcion = request.form.get("descripcion") 
+        
+        if nombre:
+            query1 = (text("UPDATE producto SET nombreProducto = :nombre, cant_producto = :cantidad, precioProducto = :precio, descripción = :descripcion WHERE id_producto = (:idhidden);"))
+            db.execute(query1,{"idhidden":idhidden, "nombre":nombre, "cantidad":cantidad, "precio":precio, "descripcion": descripcion})
+            print("nombre")        
+        db.commit()  
+        return redirect("/misproductos")
+    query = text("""select emprendimiento.id_emp, emprendimiento.nombre_emp from emprendimiento 
+                    inner join persona on emprendimiento.id_persona = persona.id_persona 
+                    where persona.id_persona = :idpersona""")
+       
+    resultadoemp = db.execute(query,{"idpersona":session["user_id"]}).fetchall()
+    print(resultadoemp)
+    
+    query2 = text("select * from categoria")
+    resultadocat = db.execute(query2).fetchall()
+        
+    
+    query3 = text("SELECT * FROM producto WHERE id_producto = :id_producto")
+    formulario = db.execute(query3,{"id_producto":id_producto}).fetchone()
+    producto = db.execute( text("select id_producto, nombreProducto from producto"))
+ 
+    return render_template("editarproducto.html", id_producto = int(id_producto),formulario = formulario, producto=producto, selectemp = resultadoemp, selectcat = resultadocat)
 
 @app.route("/categoria/<nombreCat>", methods=["GET", "POST"])
 def infoCat(nombreCat):
@@ -489,13 +520,6 @@ def infoCat(nombreCat):
     resultad = db.execute(query,{"nombreCat":nombreCat}).fetchall()
     print(resultad)
     return render_template("listaProductos.html", resul=resultad)
-
-
-
-
-
-
-
 
 
 # @app.errorhandler(404)
