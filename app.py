@@ -1,6 +1,6 @@
 
 import os
-from flask import Flask, flash, redirect, render_template, request, session, url_for
+from flask import Flask, flash, redirect, render_template, request, session, url_for, current_app
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import load_dotenv
@@ -9,12 +9,23 @@ from helpers import login_required
 import psycopg2
 from psycopg2 import OperationalError
 
+from werkzeug.utils import secure_filename
+
+# dependencias para guardar las imagenes
+from os.path import abspath, dirname, join
+# Define the application directory
+BASE_DIR = dirname(dirname(abspath(__file__)))
+# Media dir
+MEDIA_DIR = join(BASE_DIR, 'media')
+POSTS_IMAGES_DIR = join(MEDIA_DIR, 'producto')
+
 load_dotenv()
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 
 
 @app.route("/")
@@ -142,7 +153,7 @@ def login():
         print(result)
         # print(request.form.get("contraseña"))
         
-        print(check_password_hash(str(result[6]), request.form.get("contraseña")))
+        # print(check_password_hash(str(result[6]), request.form.get("contraseña")))
         
         # Ensure username exists and password is correct
         if result is None or not check_password_hash(str(result[6]), request.form.get("contraseña")):
@@ -411,9 +422,63 @@ def editarRep(id_repartidor):
     query = db.execute( text("select id_persona, nombre_persona from persona"))
     return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, roles = query2)
 
-@app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
-def eliminarRoles(id):
-    query = (text("delete from roles where id= (:id)"))
-    db.execute(query,{"id":id})
-    db.commit()
-    return redirect("/admin/roles")
+
+# Articulos
+@app.route("/misproductos",methods=["GET","POST"])
+def misproductos():
+
+    query = text("""
+                    select producto.id_producto,producto.nombreproducto,producto.cant_producto, producto.precioproducto, categoria.nombre_categoria, producto.estado from producto inner join emprendimiento on producto.id_emp = emprendimiento.id_emp
+                    INNER JOIN persona on emprendimiento.id_persona = persona.id_persona inner join categoria on producto.id_categoria = categoria.id_categoria where persona.id_persona = :iduser""")
+    productos = db.execute(query, {"iduser":2})
+    print(productos)
+    return render_template("misproductos.html", productos = productos)
+
+@app.route("/addproducto",methods=["GET","POST"])
+def addproductos():
+
+    if request.method == "POST":
+        nombreprod = request.form.get("nombre")
+        cantidadprod = int(request.form.get("cantidad"))
+        precioprod = int(request.form.get("precio"))
+        descripcprod = request.form.get("descripcion")
+        idemp = request.form.get("idemp")
+        idcat = request.form.get("idcat")
+        print(f"Este es el id de emp {idemp}")
+        print(f"Este es el id de cat {idcat}")
+
+        if 'producto_image' in request.files:
+            file = request.files['producto_image']
+            # Si el usuario no selecciona un fichero, el navegador
+            # enviará una parte vacía sin nombre de fichero
+            if file.filename:
+                image_name = secure_filename(file.filename)
+                images_dir = current_app.config['POSTS_IMAGES_DIR']
+                os.makedirs(images_dir, exist_ok=True)
+                file_path = os.path.join(images_dir, image_name)
+                file.save(file_path)
+
+                print(f"Esta es la ruta de la imagen: {image_name}")
+
+        consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripción)
+                            values(:idemp,:idcat,:nombreprod,:cantprod,:precioprod,:descripc)""")
+        db.execute(consulta,{"idemp":idemp,"idcat":idcat,"nombreprod":nombreprod,"cantprod":cantidadprod,"precioprod":precioprod,"descripc":descripcprod})
+        # db.commit()
+        return redirect("/misproductos")
+
+    query = text("""select emprendimiento.id_emp, emprendimiento.nombre_emp from emprendimiento 
+                    inner join persona on emprendimiento.id_persona = persona.id_persona 
+                    where persona.id_persona = :idpersona""")
+    resultadoemp = db.execute(query,{"idpersona":session["user_id"]}).fetchall()
+    print(resultadoemp)
+
+    if resultadoemp == []:
+        flash("Debe de registrar un emprendimiento para poder publicar un producto", "danger")
+        return redirect("/")
+    
+    query2 = text("select * from categoria")
+    resultadocat = db.execute(query2).fetchall()
+
+    return render_template("addproducto.html", selectemp = resultadoemp, selectcat = resultadocat)
+
+
