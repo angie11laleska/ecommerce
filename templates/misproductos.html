@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Mis productos
+{% endblock %}
+
+{% block main %}
+
+<table class="table table-responsive table-hover">
+    <thead>
+        <tr class="text-center">
+            <th>id</th>
+            <th>nombre</th>
+            <th>cantidad</th>
+            <th>Precio</th>  
+            <th>categoria</th>  
+            <th>Estado</th>  
+            <th>Opciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if productos %}
+                {% for i in productos %}
+                    <tr class="text-center">
+                        <th>{{i.id_producto}}</th>
+                        <th>{{i.nombreproducto}}</th>
+                        <th>{{i.cant_producto}}</th>
+                        <th>{{i.precioproducto}}</th>
+                        <th>{{i.nombre_categoria}}</th>
+                        {% if i.estado == True %}
+                        <th>
+                            <span class="badge badge-success rounded-pill d-inline">Activo</span>
+                        </th>
+                        {%else%}
+                        <th>
+                            <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
+                        </th>
+                        {%endif%}
+        
+                        <th>
+                            <a href="/admin/emp/editar/{{i.id_emp}}" class="btn btn-primary"> Editar</a>
+                            <a href="/admin/emp/eliminar/{{i.id_emp}}" class="btn btn-danger"> Eliminar</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+            {%else %}
+
+               <h1>no hay categoria</h1>
+            {%endif%}
+        
+    </tbody>
+</table>
+
+
+
+{%endblock %}
