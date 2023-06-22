@@ -11,7 +11,7 @@
         <div class="col-4">
             <div class="formulario">
                 <form action="/admin/repartidor" method="post">
-                    <input type="text" name="nombre" id="" placeholder="Nombre Repartidor" class="form-control mt-3"> <br>
+                    <input type="text" name="nombre_rep" id="id_rep" placeholder="Nombre Repartidor" class="form-control mt-3"> <br>
                     <input type="submit" value="Guardar" class="btn btn-success">
                 </form>
             </div>
@@ -33,17 +33,17 @@
                                 {% for r in rep %}
                                     <tr class="text-center">
                                         <th>{{r.id}}</th>
-                                        <th>{{r.nombre}}</th>
-                                        {% if r.nombre == 'Admin'%}
-                                            <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{r.nombre}} </th>
+                                        <th>{{r.nombre_rep}}</th>
+                                        {% if r.nombre_rep == 'Admin'%}
+                                            <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{r.nombre_rep}} </th>
                                         {%else%}
-                                            <th>{{r.nombre}}</th>
+                                            <th>{{r.nombre_rep}}</th>
                                         {%endif%}
                                     
                                         
                                         <th>
-                                            <a href="/admin/repartidor/editar/{{rol.id_repartidor}}" class="btn btn-primary"> Editar</a>
-                                            <a href="/admin/repartidor/eliminar/{{rol.id_repartidor}}" class="btn btn-danger"> Eliminar</a>
+                                            <a href="/admin/repartidor/editar/{{r.id_repartidor}}" class="btn btn-primary"> Editar</a>
+                                            <a href="/admin/repartidor/eliminar/{{r.id_repartidor}}" class="btn btn-danger"> Eliminar</a>
                                         </th>
                                     </tr>
                                 {% endfor %}

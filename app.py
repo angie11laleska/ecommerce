@@ -380,10 +380,10 @@ def eliminarRoles(id):
 @app.route("/admin/repartidor", methods=["GET", "POST"])
 def repartidor():
     if request.method == "POST":
-        nombre = request.form.get("nombre")
+        nombre = request.form.get("nombre_rep")
         if nombre:
-            query = text("INSERT INTO roles(nombre) VALUES (:nombre)")
-            db.execute(query, {"nombre":nombre})
+            query = text("INSERT INTO repartidor(nombre_rep) VALUES (:nombre)")
+            db.execute(query, {"nombre_rep":nombre})
             db.commit()
             redirect("/admin/repartidor")
         else:
@@ -392,28 +392,28 @@ def repartidor():
     return render_template("admin/repartidor.html", repartidor = query2)
 
 @app.route("/admin/repartidor/editar/<int:id_repartidor>" , methods=["GET","POST"])
-def editarRep(id_repartidor):
+def editarRep(id_rep):
     if request.method == "POST":
-        idhidden = request.form.get("id_repartidor")
-        nombre = request.form.get("nombre")
+        idhidden = request.form.get("id_rep")
+        nombre = request.form.get("nombre_rep")
         if nombre:
-            query = (text("UPDATE roles SET nombre = :nombre WHERE id = (:idhidden);"))
+            query = (text("UPDATE repartidor SET nombre_rep = :nombre WHERE id_repartidor = (:idhidden);"))
             db.execute(query,{"idhidden":idhidden, "nombre":nombre})
-            print("nombre")        
+            print("nombre_rep")        
         db.commit()  
-        return redirect("/admin/roles")
+        return redirect("/admin/repartidor")
     
-    query2 = db.execute(text("select * from roles")).fetchall()
+    query2 = db.execute(text("select * from repartidor")).fetchall()
     
-    query3 = text("SELECT nombre FROM roles WHERE id = :id")
-    formulario = db.execute(query3,{"id":id}).fetchone()
-    print(f"Esto es categoria2 {query2}")
-    query = db.execute( text("select id_persona, nombre_persona from persona"))
-    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, roles = query2)
+    query3 = text("SELECT nombre_rep FROM repartidor WHERE id_repartidor = :id")
+    formulario = db.execute(query3,{"id_repartidor":id}).fetchone()
+    print(f"Esto es repartidor {query2}")
+    query = db.execute( text("select id_repartidor, nombre_rep from repartidor"))
+    return render_template("/admin/editRepartidor.html", id = int(id_rep),formulario = formulario, repartidor = query2)
 
-@app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
-def eliminarRoles(id):
-    query = (text("delete from roles where id= (:id)"))
-    db.execute(query,{"id":id})
+@app.route("/admin/repartidor/eliminar/<int:id_repartidor>" , methods=["GET"])
+def eliminarRep(id_repartidor):
+    query = (text("UPDATE repartidor SET estado = :estado where id_repartidor= (:id)"))
+    db.execute(query,{"id":id_repartidor, "estado":False})
     db.commit()
-    return redirect("/admin/roles")
+    return redirect("/admin/repartidor")
