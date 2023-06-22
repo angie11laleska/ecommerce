@@ -29,7 +29,7 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route("/")
-@login_required
+
 def index():
     query1 = db.execute(text("""
                             SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
@@ -437,7 +437,7 @@ def misproductos():
     query = text("""
                     select producto.id_producto,producto.nombreproducto,producto.cant_producto, producto.precioproducto, categoria.nombre_categoria, producto.estado from producto inner join emprendimiento on producto.id_emp = emprendimiento.id_emp
                     INNER JOIN persona on emprendimiento.id_persona = persona.id_persona inner join categoria on producto.id_categoria = categoria.id_categoria where persona.id_persona = :iduser""")
-    productos = db.execute(query, {"iduser":2})
+    productos = db.execute(query, {"iduser":session["user_id"]})
     print(productos)
     return render_template("misproductos.html", productos = productos)
 
@@ -507,7 +507,7 @@ def producto_edit(id_producto):
     query2 = text("select * from categoria")
     resultadocat = db.execute(query2).fetchall()
         
-    
+
     query3 = text("SELECT * FROM producto WHERE id_producto = :id_producto")
     formulario = db.execute(query3,{"id_producto":id_producto}).fetchone()
     producto = db.execute( text("select id_producto, nombreProducto from producto"))
@@ -515,11 +515,18 @@ def producto_edit(id_producto):
     return render_template("editarproducto.html", id_producto = int(id_producto),formulario = formulario, producto=producto, selectemp = resultadoemp, selectcat = resultadocat)
 
 @app.route("/categoria/<nombreCat>", methods=["GET", "POST"])
-def infoCat(nombreCat):
-    query = (text("select id_producto, nombreproducto, cant_producto,precioproducto,descripción from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
+def infocat(nombreCat):
+    query = (text("select id_producto, nombre_categoria, nombreproducto, cant_producto,precioproducto,descripción from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
     resultad = db.execute(query,{"nombreCat":nombreCat}).fetchall()
     print(resultad)
     return render_template("listaProductos.html", resul=resultad)
+
+@app.route("/producto/<int:id_producto>", methods=["GET", "POST"])
+def productoid( id_producto):
+    query = text("select * from producto inner join categoria on producto.id_categoria = categoria.id_categoria where id_producto = :idproductos")
+    resultado = db.execute(query, {"idproductos":id_producto}).fetchall()
+    print(resultado)
+    return render_template("producto.html", resul = resultado)
 
 
 # @app.errorhandler(404)
