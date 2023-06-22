@@ -475,9 +475,9 @@ def addproductos():
 
     return render_template("addproducto.html", selectemp = resultadoemp, selectcat = resultadocat)
 
-@app.route("/misproductos/eliminar/<int:id_producto>" , methods=["GET"])
-def eliminarRep(id_producto):
-    query = (text("delete from repartidor where id_repartidor= (:id)"))
+@app.route("/admin/emp/editar/<int:id_producto>" , methods=["GET"])
+def eliminarProd(id_producto):
+    query = (text("delete from where id_repartidor= (:id)"))
     db.execute(query,{"id":id_producto, "estado":False})
     db.commit()
     return redirect("/misproductos")
