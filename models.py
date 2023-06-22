@@ -28,7 +28,7 @@ def main ():
         nombreProducto VARCHAR(50),
         cant_producto INTEGER,
         precioProducto NUMERIC,
-        descripción TEXT,
+        descripcion TEXT,
         estado Boolean NOT NULL DEFAULT TRUE
         )"""
     )
