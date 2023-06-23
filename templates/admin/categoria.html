@@ -14,7 +14,7 @@
                     <input type="text" name="nombre" id="" placeholder="Nombre categoria" class="form-control mt-3"> <br>
                     {% if cat_padre %}
                         <div class="col-md">
-                            <label for="validationCustom04" class="form-label">Seleccione si la categoria pertenese a una categoria padre</label>
+                            <label for="validationCustom04" class="form-label">Seleccione si la categoría pertenece a una categoría padre</label>
                             <select name="catPadre" class="form-select" id="validationCustom04" >
                             <option selected disabled value="">Elige...</option>
                             {%for categoria in cat_padre %}
@@ -61,7 +61,7 @@
                                 {% endfor %}
                             {%else %}
 
-                               <h1>no hay categoria</h1>
+                               <h1>No hay categorías</h1>
                             {%endif%}
                         
                     </tbody>

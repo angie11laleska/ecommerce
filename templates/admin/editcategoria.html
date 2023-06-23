@@ -15,7 +15,7 @@
                     <input type="text" name="nombre" id="" placeholder="Nombre categoria" class="form-control mt-3" value="{{formulario.nombre_categoria}}"> <br>
                     {% if cat_padre %}
                         <div class="col-md">
-                            <label for="validationCustom04" class="form-label">Seleccione si la categoria pertenese a una categoria padre</label>
+                            <label for="validationCustom04" class="form-label">Seleccione si la categoría pertenece a una categoría padre</label>
                             <select name="catPadre" class="form-select" id="validationCustom04" >
                             <option selected disabled value="">Elige...</option>
                             <option value=""><strong>Categoria Padre</strong></option>
@@ -23,9 +23,6 @@
                                 <option value="{{categoria.id_categoria}}">{{categoria.nombre_categoria}}</option>
                             {%endfor%}
                             </select>
-                            <div class="invalid-feedback">
-                            Selecciona un departamento.
-                            </div>
                         </div>
                       {% endif %}
                       <br>
@@ -40,7 +37,7 @@
                         <tr class=" text-center">
                             <th>id</th>
                             <th>Categoria</th>
-                            <th>Cat pdre</th>
+                            <th>Cat padre</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>

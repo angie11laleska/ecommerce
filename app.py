@@ -56,7 +56,7 @@ def carrito():
         session["carrito"] = []
         id = request.form.get("id_persona")
         session["carrito"].append(id)
-        return redirect("/carrito")
+        return render_template("carrito.html")
     
 @app.route("/registrarse", methods=["GET", "POST"])
 def registrarse():
@@ -181,14 +181,23 @@ def logout():
     return redirect("/")
 
 # parte del admin
-
+#pensar en una implmentacion de admin 
 # Categoria admin
 @app.route("/admin/categoria" , methods=["GET", "POST"])
+@login_required
 def catadmin():
     if request.method == "POST":
         nombre = request.form.get("nombre")
         catPadre = request.form.get("catPadre")
-        if catPadre:
+        if not request.form.get("nombre"):
+            flash('Es necesario ingresar una categoria', 'warning')
+            return redirect("/admin/categoria")
+        # Ensure password was submitted
+        elif not request.form.get("catPadre"):
+            flash('Elija una categoría padre', 'warning')
+            return redirect("/admin/categoria")
+        
+        if request.form.get("catPadre"):
             catPadre = catPadre
             query = text("INSERT INTO categoria(nombre_categoria, padre_id) VALUES (:nombre,:catPadre)")
             db.execute(query, {"nombre":nombre, "catPadre":catPadre})
@@ -199,6 +208,7 @@ def catadmin():
             db.execute(query, {"nombre":nombre})
             db.commit()
             redirect("/admin/categoria")
+    
 
     # query = db.execute(text("select * from categoria"))
     query = db.execute(text("""
@@ -247,10 +257,10 @@ def editarcate(id_categoria):
     print(f"Esto es categoria2 {query2}")
     return render_template("/admin/editcategoria.html", id_categoria = int(id_categoria), categorias = query, cat_padre= query2, formulario = formulario)
 
-@app.route("/admin/categoria/eliminar/<int:id_categoria>" , methods=["GET"])
-def eliminarcate(id_categoria):
+@app.route("/admin/categoria/eliminar/<int:id>" , methods=["GET"])
+def eliminarCat(id):
     query = (text("delete from categoria where id_categoria= (:id)"))
-    db.execute(query,{"id":id_categoria})
+    db.execute(query,{"id":id})
     db.commit()
     return redirect("/admin/categoria")
 
