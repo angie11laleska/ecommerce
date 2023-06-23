@@ -8,6 +8,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import login_required, stringAleatorio
 import psycopg2
 from psycopg2 import OperationalError
+from dotenv import load_dotenv
 
 
 #Para subir archivo tipo foto al servidor
@@ -35,16 +36,29 @@ def index():
                             LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
                             ORDER BY c1.padre_id IS NULL DESC
                             """))
+    query2 = db.execute(text("Select * from producto order by id_producto DESC"))
     flash('Este es el index', 'success')
-    return render_template("index.html", navcat= query1)
+    return render_template("index.html", navcat= query1, productos= query2)
 
 @app.route("/categorias", methods=["GET", "POST"])
 def categorias():
-    return render_template("categorias.html")
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("categorias.html", navcat=query1)
 
 @app.route("/emprendimiento", methods=["GET", "POST"])
 def emprendimiento():
-    return render_template("emprendimiento.html")
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("emprendimiento.html", navcat=query1)
 
 @app.route("/carrito", methods=["GET", "POST"])
 @login_required
@@ -54,7 +68,13 @@ def carrito():
         session["carrito"] = []
         id = request.form.get("id_persona")
         session["carrito"].append(id)
-        return render_template("carrito.html")
+        query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+        return render_template("carrito.html", navcat=query1)
     
 @app.route("/registrarse", methods=["GET", "POST"])
 def registrarse():
@@ -147,14 +167,13 @@ def login():
             # Query database for username
         rows = text("SELECT * FROM persona WHERE usuario = :usuario")
         result = db.execute(rows, {"usuario":usuario, "contraseña": contraseña}).fetchone()
-
         print(result)
         # print(request.form.get("contraseña"))
         
         # print(check_password_hash(str(result[6]), request.form.get("contraseña")))
         
         # Ensure username exists and password is correct
-        if result is None or not check_password_hash(str(result[6]), request.form.get("contraseña")):
+        if result is None or not check_password_hash(str(result[5]), request.form.get("contraseña")):
             print("Paso por aca")
             flash('Ingrese bien los campos', 'alert-warning')
             print("Paso por aca 2")
@@ -162,6 +181,10 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = result[0]
+        session["rol"] = result[9]
+        x = session["rol"]
+        
+        print(f"ESto es lo que devuelve usuario {result}")
         # Redirect user to home page
         print("Paso por aca 3")
         return redirect("/")
@@ -191,9 +214,9 @@ def catadmin():
             flash('Es necesario ingresar una categoria', 'warning')
             return redirect("/admin/categoria")
         # Ensure password was submitted
-        elif not request.form.get("catPadre"):
-            flash('Elija una categoría padre', 'warning')
-            return redirect("/admin/categoria")
+        # elif not request.form.get("catPadre"):
+        #     flash('Elija una categoría padre', 'warning')
+        #     return redirect("/admin/categoria")
         
         if request.form.get("catPadre"):
             catPadre = catPadre
@@ -217,7 +240,13 @@ def catadmin():
                             """))
     query2 = db.execute(text("select * from categoria")).fetchall()
     print(f"Esto es categoria2 {query2}")
-    return render_template("admin/categoria.html", categorias = query, cat_padre= query2)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("admin/categoria.html", categorias = query, cat_padre= query2, navcat=query1)
 
 @app.route("/admin/categoria/editar/<int:id_categoria>" , methods=["GET","POST"])
 def editarcate(id_categoria):
@@ -236,8 +265,13 @@ def editarcate(id_categoria):
             print("categoria hijo")
             
         db.commit()
-       
-        return redirect("/admin/categoria")
+        query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+        return redirect("/admin/categoria", navcat=query1)
 
     # query = db.execute(text("select * from categoria"))
     # db.commit()
@@ -260,7 +294,13 @@ def eliminarCat(id):
     query = (text("delete from categoria where id_categoria= (:id)"))
     db.execute(query,{"id":id})
     db.commit()
-    return redirect("/admin/categoria")
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return redirect("/admin/categoria", navcat=query1)
 
 #Endcategoria
 
@@ -274,8 +314,13 @@ def emprendimientos():
                                     select id_emp, nombre_persona, nombre_emp, direccion_emp, celular_emp, emprendimiento.estado from emprendimiento INNER JOIN
                                     persona ON persona.id_persona = emprendimiento.id_persona
     """))
-    
-    return render_template("admin/emprender.html", personas=query, info = query2)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("admin/emprender.html", personas=query, info = query2, navcat=query1)
 #da un error
 @app.route("/admin/emp/agregar", methods=["GET", "POST"])
 def emp_add():
@@ -315,7 +360,13 @@ def emp_add():
              flash("Ocurrio un error, intentelo nuevamente", "danger")
              return redirect("/admin/emp")
     query = db.execute( text("select id_persona, nombre_persona from persona"))
-    return render_template("/admin/add-emp.html", personas = query)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("/admin/add-emp.html", personas = query, navcat=query1)
 
 @app.route("/admin/emp/editar/<int:id_emp>", methods=["GET", "POST"])
 def emp_edit(id_emp):
@@ -339,8 +390,13 @@ def emp_edit(id_emp):
     query3 = text("SELECT * FROM emprendimiento WHERE id_emp = :id_emp")
     formulario = db.execute(query3,{"id_emp":id_emp}).fetchone()
     personas = db.execute( text("select id_persona, nombre_persona from persona"))
- 
-    return render_template("/admin/edit-emp.html", id_emp = int(id_emp),formulario = formulario, personas=personas)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("/admin/edit-emp.html", id_emp = int(id_emp),formulario = formulario, personas=personas, navcat=query1)
 
 #validar un boton de activo o inactivo
 @app.route("/admin/emp/eliminar/<int:id_emp>" , methods=["GET"])
@@ -348,7 +404,13 @@ def eliminarEmp(id_emp):
     query = (text("UPDATE emprendimiento SET estado = :estado where id_emp= (:id)"))
     db.execute(query,{"id":id_emp, "estado":False})
     db.commit()
-    return redirect("/admin/emp")
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return redirect("/admin/emp", navcat=query1)
 #fin de Emprendimiento
 
 #inicio roles
@@ -364,7 +426,13 @@ def roles():
         else:
             flash("Ingrese un rol", "warning")
     query2 = db.execute(text("select * from roles")).fetchall() 
-    return render_template("admin/roles.html", roles = query2)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("admin/roles.html", roles = query2, navcat=query1)
 
 @app.route("/admin/roles/editar/<int:id>" , methods=["GET","POST"])
 def editarRoles(id):
@@ -376,7 +444,13 @@ def editarRoles(id):
             db.execute(query,{"idhidden":idhidden, "nombre":nombre})
             print("nombre")        
         db.commit()  
-        return redirect("/admin/roles")
+        query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+        return redirect("/admin/roles", navcat=query1)
     
     query2 = db.execute(text("select * from roles")).fetchall()
     
@@ -384,7 +458,13 @@ def editarRoles(id):
     formulario = db.execute(query3,{"id":id}).fetchone()
     print(f"Esto es categoria2 {query2}")
     query = db.execute( text("select id_persona, nombre_persona from persona"))
-    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, roles = query2)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, roles = query2, navcat=query1)
 
 @app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
 def eliminarRoles(id):
@@ -408,7 +488,13 @@ def repartidor():
         else:
             flash("Ingrese un repartidor", "warning")
     query2 = db.execute(text("select * from repartidor")).fetchall() 
-    return render_template("admin/repartidor.html", repartidor = query2)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("admin/repartidor.html", repartidor = query2, navcat=query1)
 
 @app.route("/admin/repartidor/editar/<int:id_repartidor>" , methods=["GET","POST"])
 def editarRep(id_repartidor):
@@ -447,7 +533,13 @@ def misproductos():
                     INNER JOIN persona on emprendimiento.id_persona = persona.id_persona inner join categoria on producto.id_categoria = categoria.id_categoria where persona.id_persona = :iduser""")
     productos = db.execute(query, {"iduser":session["user_id"]})
     print(productos)
-    return render_template("misproductos.html", productos = productos)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("misproductos.html", productos = productos, navcat=query1)
 
 @app.route("/addproducto",methods=["GET","POST"])
 def addproductos():
@@ -497,8 +589,13 @@ def addproductos():
     
     query2 = text("select * from categoria")
     resultadocat = db.execute(query2).fetchall()
-
-    return render_template("addproducto.html", selectemp = resultadoemp, selectcat = resultadocat)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("addproducto.html", selectemp = resultadoemp, selectcat = resultadocat, navcat=query1)
 
 @app.route("/misproductos/eliminar/<int:id_producto>" , methods=["GET"])
 def eliminarProd(id_producto):
@@ -536,23 +633,45 @@ def producto_edit(id_producto):
     query3 = text("SELECT * FROM producto WHERE id_producto = :id_producto")
     formulario = db.execute(query3,{"id_producto":id_producto}).fetchone()
     producto = db.execute( text("select id_producto, nombreProducto from producto"))
- 
-    return render_template("editarproducto.html", id_producto = int(id_producto),formulario = formulario, producto=producto, selectemp = resultadoemp, selectcat = resultadocat)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("editarproducto.html", id_producto = int(id_producto),formulario = formulario, producto=producto, selectemp = resultadoemp, selectcat = resultadocat, navcat=query1)
 
 @app.route("/categoria/<nombreCat>", methods=["GET", "POST"])
 def infocat(nombreCat):
-    query = (text("select id_producto, nombre_categoria, nombreproducto, cant_producto,precioproducto,descripción from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
+    query = (text("select id_producto, nombre_categoria, nombreproducto, cant_producto,precioproducto,descripción, producto.url_image from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
     resultad = db.execute(query,{"nombreCat":nombreCat}).fetchall()
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
     print(resultad)
-    return render_template("listaProductos.html", resul=resultad)
+    return render_template("listaProductos.html", resul=resultad, navcat=query1)
 
 @app.route("/producto/<int:id_producto>", methods=["GET", "POST"])
 def productoid( id_producto):
     query = text("select * from producto inner join categoria on producto.id_categoria = categoria.id_categoria where id_producto = :idproductos")
     resultado = db.execute(query, {"idproductos":id_producto}).fetchall()
     print(resultado)
-    return render_template("producto.html", resul = resultado)
+    query1 = db.execute(text("""
+                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            FROM categoria AS c1 
+                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            ORDER BY c1.padre_id IS NULL DESC
+                            """))
+    return render_template("producto.html", resul = resultado, navcat=query1)
 
+
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin( ):
+    return render_template("admin/admin.html")
 
 # @app.errorhandler(404)
 # def page_not_found(error):

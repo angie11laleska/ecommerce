@@ -29,6 +29,7 @@ def main ():
         cant_producto INTEGER,
         precioProducto NUMERIC,
         descripcion TEXT,
+        url_image varchar null,
         estado Boolean NOT NULL DEFAULT TRUE
         )"""
     )
