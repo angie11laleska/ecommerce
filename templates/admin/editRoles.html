@@ -12,8 +12,20 @@
             <div class="formulario">
                 <form action="/admin/roles/editar/{{id}}" method="post">
                     <input type="hidden" name="id" value="{{id}}">
-                    <input type="text" name="nombre" id="" placeholder="Nombre Rol" class="form-control mt-3" value="{{formulario.nombre}}"> <br>0
-                    <input type="submit" value="Guardar" class="btn btn-success">
+                    <input type="text" name="nombre" id="" placeholder="Nombre Roles" class="form-control mt-3"> <br>
+                    {% if cat_padre %}
+                        <div class="col-md">
+                            <label for="validationCustom04" class="form-label">Seleccione su rol</label>
+                            <select name="catPadre" class="form-select" id="validationCustom04" >
+                            <option selected disabled value="">Elige...</option>
+                            {%for rol in roles %}
+                                <option value="{{rol.id_roles}}">{{rol.nombre_roles}}</option>
+                            {%endfor%}
+                            </select>
+                        </div>
+                      {% endif %}
+                      <br>
+                    <input type="submit" value="Guardar" class="btn btn-success" style="background-color: #d8b3ff;">
                 </form>
             </div>
         </div>
@@ -23,8 +35,8 @@
                     <thead>
                         <tr class=" text-center">
                             <th>id</th>
-                            <th>Admin</th>
-                            <th>Usuario</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -36,17 +48,15 @@
                                         <th>{{rol.nombre}}</th>
                                         {% if rol.nombre == 'Admin' %}
                                         <th class="text-center"><i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i></i></th>
-                                        {%else %}
-                                            <th>{{rol.nombre}}</th>
                                         {%endif%}
                                         <th>
-                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger"> Eliminar</a>
+                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="background-color: #d8b3ff;"> Eliminar</a>
                                         </th>
                                     </tr>
                                 {% endfor %}
                             {%else %}
 
-                               <h1>no hay roles</h1>
+                               <h1>No hay roles registrados</h1>
                             {%endif%}
                         
                     </tbody>

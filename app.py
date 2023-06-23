@@ -278,7 +278,7 @@ def emprendimientos():
     """))
     
     return render_template("admin/emprender.html", personas=query, info = query2)
-
+#da un error
 @app.route("/admin/emp/agregar", methods=["GET", "POST"])
 def emp_add():
     if request.method == "POST":
@@ -317,7 +317,7 @@ def emp_add():
              flash("Ocurrio un error, intentelo nuevamente", "danger")
              return redirect("/admin/emp")
     query = db.execute( text("select id_persona, nombre_persona from persona"))
-    return render_template("admin/add-emp.html", personas = query)
+    return render_template("/admin/add-emp.html", personas = query)
 
 @app.route("/admin/emp/editar/<int:id_emp>", methods=["GET", "POST"])
 def emp_edit(id_emp):
@@ -344,14 +344,14 @@ def emp_edit(id_emp):
  
     return render_template("/admin/edit-emp.html", id_emp = int(id_emp),formulario = formulario, personas=personas)
 
+#validar un boton de activo o inactivo
 @app.route("/admin/emp/eliminar/<int:id_emp>" , methods=["GET"])
 def eliminarEmp(id_emp):
     query = (text("UPDATE emprendimiento SET estado = :estado where id_emp= (:id)"))
     db.execute(query,{"id":id_emp, "estado":False})
     db.commit()
     return redirect("/admin/emp")
-
-# Endemprendimiento
+#fin de Emprendimiento
 
 #inicio roles
 @app.route("/admin/roles", methods=["GET", "POST"])

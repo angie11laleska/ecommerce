@@ -12,6 +12,18 @@
             <div class="formulario">
                 <form action="/admin/roles" method="post">
                     <input type="text" name="nombre" id="" placeholder="Nombre Roles" class="form-control mt-3"> <br>
+                    {% if cat_padre %}
+                        <div class="col-md">
+                            <label for="validationCustom04" class="form-label">Seleccione su rol</label>
+                            <select name="catPadre" class="form-select" id="validationCustom04" >
+                            <option selected disabled value="">Elige...</option>
+                            {%for rol in roles %}
+                                <option value="{{rol.id_roles}}">{{rol.nombre_roles}}</option>
+                            {%endfor%}
+                            </select>
+                        </div>
+                      {% endif %}
+                      <br>
                     <input type="submit" value="Guardar" class="btn btn-success">
                 </form>
             </div>
@@ -23,6 +35,7 @@
                         <tr class="text-center">
                             <th>id</th>
                             <th>Rol</th>
+                            <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -34,14 +47,12 @@
                                         <th>{{rol.nombre}}</th>
                                         {% if rol.nombre == 'Admin'%}
                                             <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{rol.nombre}} </th>
-                                        {%else%}
-                                            <th>{{rol.nombre}}</th>
                                         {%endif%}
                                     
                                         
                                         <th>
-                                            <a href="/admin/roles/editar/{{rol.id}}" class="btn btn-primary"> Editar</a>
-                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger"> Eliminar</a>
+                                            <a href="/admin/roles/editar/{{rol.id}}" class="btn btn-primary" style="background-color: #d8b3ff;"> Editar </a>
+                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger" style="background-color: #d8b3ff;"> Eliminar </a>
                                         </th>
                                     </tr>
                                 {% endfor %}
