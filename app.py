@@ -10,6 +10,7 @@ import psycopg2
 from psycopg2 import OperationalError
 
 
+
 #Para subir archivo tipo foto al servidor
 from werkzeug.utils import secure_filename 
 #El módulo os en Python proporciona los detalles y la funcionalidad del sistema operativo.
@@ -23,6 +24,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 
 
 
@@ -443,7 +445,7 @@ def eliminarRep(id_repartidor):
 def misproductos():
 
     query = text("""
-                    select producto.id_producto,producto.nombreproducto,producto.cant_producto, producto.precioproducto, categoria.nombre_categoria, producto.estado from producto inner join emprendimiento on producto.id_emp = emprendimiento.id_emp
+                    select producto.id_producto,producto.nombreproducto,producto.cant_producto, producto.precioproducto, categoria.nombre_categoria, producto.estado, producto.url_image from producto inner join emprendimiento on producto.id_emp = emprendimiento.id_emp
                     INNER JOIN persona on emprendimiento.id_persona = persona.id_persona inner join categoria on producto.id_categoria = categoria.id_categoria where persona.id_persona = :iduser""")
     productos = db.execute(query, {"iduser":session["user_id"]})
     print(productos)
@@ -463,21 +465,21 @@ def addproductos():
         print(f"Este es el id de cat {idcat}")
 
         if(request.files['archivo']):
-                file = request.files['archivo']
-                basepath = os.path.dirname(__file__)  # La ruta donde se encuentra el archivo actual
-                filename = secure_filename(file.filename)  # Nombre original del archivo
-
-                # Capturando extensión del archivo ejemplo: (.png, .jpg, .pdf ...etc)
-                extension = os.path.splitext(filename)[1]
-                nuevoNombreFile = stringAleatorio() + extension
-
-                upload_path = os.path.join(basepath, 'static', 'archivos', nuevoNombreFile).replace('\\', '/')
-                print(f"Este es el upload path: {upload_path}")
+                #Script para archivo
+                file     = request.files['archivo']
+                basepath = path.dirname (__file__) #La ruta donde se encuentra el archivo actual
+                filename = secure_filename(file.filename) #Nombre original del archivo
+                
+                #capturando extensión del archivo ejemplo: (.png, .jpg, .pdf ...etc)
+                extension           = path.splitext(filename)[1]
+                nuevoNombreFile     = stringAleatorio() + extension
+        
+                upload_path = path.join (basepath, 'static/archivos', nuevoNombreFile) 
                 file.save(upload_path)
-                relative_path = os.path.relpath(upload_path, basepath).replace('\\', '/')
+                relative_path = upload_path.split('static', 1)[1].strip('/')
                 print(f"Este es el nombre de la img {relative_path}")
-                ruta = f"/static/{relative_path}"
-                print(ruta)
+                ruta = f"\static\{relative_path}"
+                print(f"{ruta}")
 
         consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripción, url_image)
                             values(:idemp,:idcat,:nombreprod,:cantprod,:precioprod,:descripc,:url)""")
