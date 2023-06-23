@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Categoria
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="formulario">
+                <form action="/admin/categoria/editar/{{id_categoria}}" method="post">
+                    <input type="hidden" name="id_categoria" value="{{id_categoria}}">
+                    <input type="text" name="nombre" id="" placeholder="Nombre categoria" class="form-control mt-3" value="{{formulario.nombre_categoria}}"> <br>
+                    {% if cat_padre %}
+                        <div class="col-md">
+                            <label for="validationCustom04" class="form-label">Seleccione si la categoría pertenece a una categoría padre</label>
+                            <select name="catPadre" class="form-select" id="validationCustom04" >
+                            <option selected disabled value="">Elige...</option>
+                            <option value=""><strong>Categoria Padre</strong></option>
+                            {%for categoria in cat_padre %}
+                                <option value="{{categoria.id_categoria}}">{{categoria.nombre_categoria}}</option>
+                            {%endfor%}
+                            </select>
+                        </div>
+                      {% endif %}
+                      <br>
+                    <input type="submit" value="Guardar" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="cat-info">
+                <table class="table table-snipped">
+                    <thead>
+                        <tr class=" text-center">
+                            <th>id</th>
+                            <th>Categoria</th>
+                            <th>Cat padre</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if categorias %}
+                                {% for categoria in categorias %}
+                                    <tr class="text-center">
+                                        <th>{{categoria.id_categoria}}</th>
+                                        <th>{{categoria.nombre_categoria}}</th>
+                                        {% if categoria.cat_padre == None %}
+                                        <th class="text-center"><i class="fa-solid fa-crown fa-beat " style="color: #fbf304;"></i></i></th>
+                                        {%else %}
+                                            <th>{{categoria.cat_padre}}</th>
+                                        {%endif%}
+                                        <th>
+                                            <a href="/admin/categoria/eliminar/{{categoria.id_categoria}}" class="btn btn-danger"> Eliminar</a>
+                                        </th>
+                                    </tr>
+                                {% endfor %}
+                            {%else %}
+
+                               <h1>no hay categoria</h1>
+                            {%endif%}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock %}

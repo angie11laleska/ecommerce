@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <!-- cdn-mdb -->
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link href="/static/style.css" rel="stylesheet">
+    <title>Shop4YOU</title>
+</head>
+<body>
+
+  <header>
+    <!-- Jumbotron -->
+    <div class="p-3 text-center bg-white border-bottom">
+      <div class="container">
+        <div class="row gy-3">
+          <!-- Left elements -->
+          <div class="col-lg-2 col-sm-4 col-4">
+            <a href="/" class="float-start">
+              <img src="/static/shop.png" height="40" />
+            </a>
+          </div>
+          <!-- Left elements -->
+  
+          <!-- Center elements -->
+          <div class="order-lg-last col-lg col-sm-8 col-8">
+            <div class="d-flex float-end">
+              <a href="#" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-heart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Wishlist</p> </a>
+              <a href="/addproducto" class="border rounded py-1 px-3 nav-link d-flex align-items-center" > <i class="fas fa-shopping-cart m-1 me-md-2"></i><p class="d-none d-md-block mb-0">My cart</p> </a>
+              {% if session.user_id %}
+                <a href="/logout" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Log out</p> </a>
+              {% else %}
+                <a href="/login" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Login</p> </a>
+                <a href="/registrarse" class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"> <i class="fas fa-user-alt m-1 me-md-2"></i><p class="d-none d-md-block mb-0">Register</p> </a>
+              {% endif %}
+            </div>
+          </div>
+          <!-- Center elements -->
+  
+          <!-- Right elements -->
+          
+          <!-- Right elements -->
+        </div>
+      </div>
+    </div>
+    <!-- Jumbotron -->
+  
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <!-- Container wrapper -->
+      <div class="container justify-content-end justify-content-md-between">
+        <!-- Toggle button -->
+        <button
+                class="navbar-toggler border py-2 text-dark"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarLeftAlignExample"
+                aria-controls="navbarLeftAlignExample"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+                >
+          <i class="fas fa-bars"></i>
+        </button>
+  
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
+          <!-- Left links -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex justify-content-center">
+            <!-- Navbar dropdown -->
+            {% for cat in navcat %}
+              <li class="nav-item">
+                <a class="nav-link text-dark" href="categoria/{{cat.nombre_categoria}}" role="button">
+                  {{cat.nombre_categoria}}
+                </a>
+                <!-- Dropdown menu -->
+              </li>
+            {% endfor %}
+          </ul>
+          <!-- Left links -->
+        </div>
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+    <!-- Jumbotron -->
+    {% block jumbotron %}
+      
+    {% endblock%}
+    <!-- Jumbotron -->
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+      <script>
+      const Toast = Swal.mixin({
+          toast: true,
+          position: 'bottom-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        })
+
+        Toast.fire({
+          icon: '{{category}}',
+          title: '{{message}}'
+        })
+      </script>
+
+
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+
+    <main id="main">
+        {% block main %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h6>Acerca de</h6>
+              <p class="text-justify">Shop4YOU.com <i>Pagina web para realizar compras en lineas en diferentes emprendimientos de Nicaragua</i> es una iniciativa para los usuarios enfocada en ahorrar tiempo de busqueda en diferentes redes sociales y para los emprendedores una opcion para promocionar sus productos. Una pagina sencilla pero funcional, disfruta tu compra :)</p>
+            </div>
+
+            <div class="col-xs-6 col-md-3">
+              <h6>Categorias</h6>
+              <ul class="footer-links">
+                <li><a href="/categoria/Ropa">Ropa</a></li>
+                <li><a href="categoria/zapatos">Zapatos</a></li>
+                <li><a href="categoria/joyeria">Joyeria</a></li>
+                <li><a href="categoria/belleza">Belleza</a></li>
+              </ul>
+            </div>
+
+            <div class="col-xs-6 col-md-3">
+              <h6>Enlaces</h6>
+              <ul class="footer-links">
+                <li><a href="principal">Principal</a></li>
+                <li><a href="emprendimiento">Emprendimientos</a></li>
+                <li><a href="registrarse">Registrarse</a></li>
+                <li><a href="emprendimiento">Comprar</a></li>
+              </ul>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 col-sm-6 col-xs-12">
+              <p class="copyright-text">Copyright &copy; 2023
+              </p>
+            </div>
+          </div>
+        </div>
+  </footer>
+  <!-- script mdb -->
+    <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
+</body>
+
+</html>

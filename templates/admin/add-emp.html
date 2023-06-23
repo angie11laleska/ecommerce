@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title%}
+{% endblock %}
+
+{%block main %}
+
+<div class="formulario pb-5">
+    <h4>Agregar nuevo emprendimiento</h4>
+<form action="/admin/emp/agregar" method="post">
+    <!-- Name input -->
+    <div class="form-outline mb-4">
+      <input type="text" id="form4Example1" class="form-control" name="nombreE" value="" />
+      <label class="form-label" for="form4Example1">Emprendimiento</label>
+    </div>
+  
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <input type="text" id="form4Example2" class="form-control" name="redS" />
+      <label class="form-label" for="form4Example2">Red Social</label>
+    </div>
+
+    <div class="form-outline mb-4">
+      <input type="text" id="form4Example3" class="form-control" name="phone" />
+      <label class="form-label" for="form4Example3">Número Celular</label>
+    </div>
+    <div class="form-outline mb-4">
+      <input type="text" id="form4Example4" class="form-control" name="direccion" />
+      <label class="form-label" for="form4Example4">Direccion del local</label>
+    </div>
+  
+    <!-- Message input -->
+    <div class="form-outline mb-4">
+        <select class="form-select" aria-label="Default select example" name="personaN">
+            <option selected>Selecciona una opcion:</option>
+            {% for persona in personas %}
+                <option value="{{persona.id_persona}}">{{persona.nombre_persona}}</option>
+            {% endfor %}
+          </select> <br>
+    </div>
+  
+  
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-primary btn-block mb-4">Agregar</button>
+  </form>
+</div>
+
+{% endblock %}

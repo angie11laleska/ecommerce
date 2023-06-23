@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Agregrar producto
+{% endblock %}
+
+{% block main %}
+<form action="/addproducto" method="post" enctype="multipart/form-data">
+
+    <input type="text" name="nombre" placeholder="nombre del articulo">
+    <input type="number" name="cantidad" placeholder="cantidad">
+    <input type="number" name="precio" placeholder="precio del producto">
+    <textarea id="" cols="30" rows="10" name="descripcion" placeholder="descripcion del producto"></textarea>
+    <select name="idemp" id="">
+        {%for emp in selectemp %}
+        <option value="{{emp.id_emp}}">{{emp.nombre_emp}}</option>
+        {%endfor%}
+    </select>
+    <select name="idcat" id="">
+        {%for cat in selectcat %}
+        <option value="{{cat.id_categoria}}">{{cat.nombre_categoria}}</option>
+        {%endfor%}
+    </select>
+    <input type="file" name="archivo" id="" multiple>
+    <input type="submit" value="guardar">
+</form>
+{%endblock %}

@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Admin Roles
+{% endblock %}
+
+{% block main %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="formulario">
+                <form action="/admin/roles" method="post">
+                    <input type="text" name="nombre" id="" placeholder="Nombre Roles" class="form-control mt-3"> <br>
+                    {% if cat_padre %}
+                        <div class="col-md">
+                            <label for="validationCustom04" class="form-label">Seleccione su rol</label>
+                            <select name="catPadre" class="form-select" id="validationCustom04" >
+                            <option selected disabled value="">Elige...</option>
+                            {%for rol in roles %}
+                                <option value="{{rol.id_roles}}">{{rol.nombre_roles}}</option>
+                            {%endfor%}
+                            </select>
+                        </div>
+                      {% endif %}
+                      <br>
+                    <input type="submit" value="Guardar" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="cat-info">
+                <table class="table table-snipped">
+                    <thead>
+                        <tr class="text-center">
+                            <th>id</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if roles %}
+                                {% for rol in roles %}
+                                    <tr class="text-center">
+                                        <th>{{rol.id}}</th>
+                                        <th>{{rol.nombre}}</th>
+                                        <th>{{rol.estado}}</th>
+                                        {% if rol.estado == True %}
+                                        <th>
+                                            <span class="badge badge-success rounded-pill d-inline">Activo</span>
+                                        </th>
+                                        {%else%}
+                                        <th>
+                                            <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
+                                        </th>
+                                        {%endif%}
+                                        {% if rol.nombre == 'Admin'%}
+                                            <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{rol.nombre}} </th>
+                                        {%endif%}
+                                    
+                                        
+                                        <th>
+                                            <a href="/admin/roles/editar/{{rol.id}}" class="btn btn-primary" style="background-color: #d8b3ff;"> Editar </a>
+                                            <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger" style="background-color: #d8b3ff;"> Eliminar </a>
+                                        </th>
+                                    </tr>
+                                {% endfor %}
+                        {%else %}
+                            <tr>
+                                <td>
+                                    No hay roles registrados
+                                </td>
+                            </tr>
+                        {%endif%}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock %}

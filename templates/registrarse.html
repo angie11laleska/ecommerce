@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Registro
+{% endblock %}
+{% block main %}
+<h2 style="text-align:center;">Llena este pequeño formulario para poder registrarte con nosotros</h2>
+<br></br>
+<div class="container">
+<form class="row g-3 needs-validation" method= "POST" action="/registrarse">
+    <div class="col-md-3">
+      <label for="validationCustom01" class="form-label">Nombre</label>
+      <input name = "nombre" type="text"  class="form-control" id="validationCustom01" value="" >
+      <div class="valid-feedback">
+        Muy bien!
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label for="validationCustom02" class="form-label">Apellido</label>
+      <input name = "apellido" type="text" class="form-control" id="validationCustom02" value="" >
+      <div class="valid-feedback">
+        Muy bien!
+      </div>
+    </div>
+    <div class="col-md-2">
+      <label for="validationCustomUsername" class="form-label">Usuario</label>
+      <div class="input-group has-validation">
+        <input name = "usuario" type="text" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" >
+        <div class="invalid-feedback">
+        Escribe el nombre del usuario.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <label for="validationCustomUsername" class="form-label">Contraseña</label>
+      <div class="input-group has-validation">
+        <input name = "contraseña" type="password" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" >
+        <div class="invalid-feedback">
+        Elige una contraseña.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <label for="validationCustomUsername" class="form-label">Confirmar Contraseña</label>
+      <div class="input-group has-validation">
+        <input name = "confirmacion" type="password" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" >
+        <div class="invalid-feedback">
+        Elige una contraseña.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <label for="validationCustom03" class="form-label">Direccion</label>
+      <input name = "direccion" type="text" class="form-control" id="validationCustom03" >
+      <div class="invalid-feedback">
+        Ingresa una direccion valida.
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label for="validationCustom04" class="form-label">Departamento</label>
+      <select name = "departamento" class="form-select" id="validationCustom04" >
+        <option selected disabled value="">Elige...</option>
+        <option values = "Chinandega">Chinandega</option>
+        <option values = "Leon">Leon</option>
+        <option values = "Managua">Managua</option>
+      </select>
+      <div class="invalid-feedback">
+        Selecciona un departamento.
+      </div>
+    </div>
+    <div class="col-md-3">
+      <label for="validationCustom05" class="form-label">Numero telefonico</label>
+      <input name="celular" type="number" class="form-control" id="validationCustom05" >
+      <div class="invalid-feedback">
+        Ingresa un numero telefonico valido.
+      </div>
+    </div>
+    <div class="col-12">
+      <button class="btn btn-light" type="submit" id="botonS">Registrarse</button>
+    </div>
+  </form>
+</div>
+{%endblock %}
