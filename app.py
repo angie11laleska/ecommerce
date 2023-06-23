@@ -36,7 +36,7 @@ def index():
                             LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
                             ORDER BY c1.padre_id IS NULL DESC
                             """))
-    query2 = db.execute(text("Select * from producto order by id_producto DESC"))
+    query2 = db.execute(text("Select * from producto p JOIN categoria c ON p.id_categoria = c.id_categoria order by id_producto DESC  "))
     flash('Este es el index', 'success')
     return render_template("index.html", navcat= query1, productos= query2)
 
@@ -571,7 +571,7 @@ def addproductos():
                 ruta = f"\static\{relative_path}"
                 print(ruta)
 
-        consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripción, url_image)
+        consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripcion, url_image)
                             values(:idemp,:idcat,:nombreprod,:cantprod,:precioprod,:descripc,:url)""")
         db.execute(consulta,{"idemp":idemp,"idcat":idcat,"nombreprod":nombreprod,"cantprod":cantidadprod,"precioprod":precioprod,"descripc":descripcprod,"url":ruta})
         db.commit()
@@ -643,7 +643,7 @@ def producto_edit(id_producto):
 
 @app.route("/categoria/<nombreCat>", methods=["GET", "POST"])
 def infocat(nombreCat):
-    query = (text("select id_producto, nombre_categoria, nombreproducto, cant_producto,precioproducto,descripción, producto.url_image from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
+    query = (text("select id_producto, nombre_categoria, nombreproducto, cant_producto,precioproducto,descripcion, producto.url_image from producto inner join categoria on producto.id_categoria = categoria.id_categoria where categoria.nombre_categoria= :nombreCat"))
     resultad = db.execute(query,{"nombreCat":nombreCat}).fetchall()
     query1 = db.execute(text("""
                             SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
