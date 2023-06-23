@@ -22,7 +22,18 @@
         {% if productos %}
                 {% for i in productos %}
                     <tr class="text-center">
-                        <th>{{i.id_producto}}</th>
+                        <th>
+                            <div class="d-flex align-items-center">
+                            <img
+                                src="{{i.url_image}}"
+                                alt=""
+                                style="width: 45px; height: 45px"
+                                class="rounded-circle"
+                                />
+                            <div class="ms-3">
+                              <p class="fw-bold mb-1">{{i.id_producto}}</p>
+                            </div>
+                          </div></th>
                         <th>{{i.nombreproducto}}</th>
                         <th>{{i.cant_producto}}</th>
                         <th>{{i.precioproducto}}</th>
@@ -45,7 +56,7 @@
                 {% endfor %}
             {%else %}
 
-               <h1>no hay categoria</h1>
+               <h1>No hay productos</h1>
             {%endif%}
         
     </tbody>

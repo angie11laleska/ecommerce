@@ -5,19 +5,17 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import login_required
+from helpers import login_required, stringAleatorio
 import psycopg2
 from psycopg2 import OperationalError
 
-from werkzeug.utils import secure_filename
 
-# dependencias para guardar las imagenes
-from os.path import abspath, dirname, join
-# Define the application directory
-BASE_DIR = dirname(dirname(abspath(__file__)))
-# Media dir
-MEDIA_DIR = join(BASE_DIR, 'media')
-POSTS_IMAGES_DIR = join(MEDIA_DIR, 'producto')
+#Para subir archivo tipo foto al servidor
+from werkzeug.utils import secure_filename 
+#El módulo os en Python proporciona los detalles y la funcionalidad del sistema operativo.
+import os 
+from os import remove #Modulo  para remover archivo
+from os import path #Modulo para obtener la ruta o directorio
 
 load_dotenv()
 engine = create_engine(os.getenv("DATABASE_URL"))
@@ -464,9 +462,26 @@ def addproductos():
         print(f"Este es el id de emp {idemp}")
         print(f"Este es el id de cat {idcat}")
 
-        consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripción)
-                            values(:idemp,:idcat,:nombreprod,:cantprod,:precioprod,:descripc)""")
-        db.execute(consulta,{"idemp":idemp,"idcat":idcat,"nombreprod":nombreprod,"cantprod":cantidadprod,"precioprod":precioprod,"descripc":descripcprod})
+        if(request.files['archivo']):
+                file = request.files['archivo']
+                basepath = os.path.dirname(__file__)  # La ruta donde se encuentra el archivo actual
+                filename = secure_filename(file.filename)  # Nombre original del archivo
+
+                # Capturando extensión del archivo ejemplo: (.png, .jpg, .pdf ...etc)
+                extension = os.path.splitext(filename)[1]
+                nuevoNombreFile = stringAleatorio() + extension
+
+                upload_path = os.path.join(basepath, 'static', 'archivos', nuevoNombreFile).replace('\\', '/')
+                print(f"Este es el upload path: {upload_path}")
+                file.save(upload_path)
+                relative_path = os.path.relpath(upload_path, basepath).replace('\\', '/')
+                print(f"Este es el nombre de la img {relative_path}")
+                ruta = f"/static/{relative_path}"
+                print(ruta)
+
+        consulta = text("""Insert into producto(id_emp,id_categoria,nombreproducto, cant_producto, precioproducto, descripción, url_image)
+                            values(:idemp,:idcat,:nombreprod,:cantprod,:precioprod,:descripc,:url)""")
+        db.execute(consulta,{"idemp":idemp,"idcat":idcat,"nombreprod":nombreprod,"cantprod":cantidadprod,"precioprod":precioprod,"descripc":descripcprod,"url":ruta})
         db.commit()
         return redirect("/misproductos")
 

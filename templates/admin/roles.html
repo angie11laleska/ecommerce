@@ -45,6 +45,16 @@
                                     <tr class="text-center">
                                         <th>{{rol.id}}</th>
                                         <th>{{rol.nombre}}</th>
+                                        <th>{{rol.estado}}</th>
+                                        {% if rol.estado == True %}
+                                        <th>
+                                            <span class="badge badge-success rounded-pill d-inline">Activo</span>
+                                        </th>
+                                        {%else%}
+                                        <th>
+                                            <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
+                                        </th>
+                                        {%endif%}
                                         {% if rol.nombre == 'Admin'%}
                                             <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{rol.nombre}} </th>
                                         {%endif%}
