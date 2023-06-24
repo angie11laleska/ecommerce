@@ -406,14 +406,10 @@ def eliminarEmp(id_emp):
 @app.route("/admin/roles", methods=["GET", "POST"])
 def roles():
     if request.method == "POST":
-        nombre = request.form.get("nombre")
-        if nombre:
             query = text("INSERT INTO roles(nombre) VALUES (:nombre)")
             db.execute(query, {"nombre":nombre})
             db.commit()
-            redirect("/admin/categoria")
-        else:
-            flash("Ingrese un rol", "warning")
+            redirect("/admin/roles")
     query2 = db.execute(text("select * from roles")).fetchall() 
     query1 = db.execute(text("""
                             SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
@@ -424,43 +420,37 @@ def roles():
     return render_template("admin/roles.html", roles = query2, navcat=query1)
 
 @app.route("/admin/roles/editar/<int:id>" , methods=["GET","POST"])
-def editarRoles(id):
+def editarRol(id):
     if request.method == "POST":
-        idhidden = request.form.get("id")
+        id = request.form.get("id")
         nombre = request.form.get("nombre")
         if nombre:
-            query = (text("UPDATE roles SET nombre = :nombre WHERE id = (:idhidden);"))
-            db.execute(query,{"idhidden":idhidden, "nombre":nombre})
+            query = (text("UPDATE roles SET nombre = :nombre WHERE id = (:id);"))
+            db.execute(query,{"id":id, "nombre":nombre})
             print("nombre")        
         db.commit()  
-        query1 = db.execute(text("""
-                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
-                            FROM categoria AS c1 
-                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
-                            ORDER BY c1.padre_id IS NULL DESC
-                            """))
-        return redirect("/admin/roles", navcat=query1)
-    
+        return redirect("/admin/roles")
+    print(id)
     query2 = db.execute(text("select * from roles")).fetchall()
     
     query3 = text("SELECT nombre FROM roles WHERE id = :id")
     formulario = db.execute(query3,{"id":id}).fetchone()
-    print(f"Esto es categoria2 {query2}")
-    query = db.execute( text("select id_persona, nombre_persona from persona"))
+    print(f"Esto es repartidor {query2}")
+    query = db.execute( text("select id, nombre from roles"))
+    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, rol = query2)
+
+@app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
+def eliminarRol(id):
+    query = (text("UPDATE roles SET estado = :estado where id= (:id)"))
+    db.execute(query,{"id":id, "estado":False})
+    db.commit()
     query1 = db.execute(text("""
                             SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
                             FROM categoria AS c1 
                             LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
                             ORDER BY c1.padre_id IS NULL DESC
                             """))
-    return render_template("/admin/editRoles.html", id = int(id),formulario = formulario, roles = query2, navcat=query1)
-
-@app.route("/admin/roles/eliminar/<int:id>" , methods=["GET"])
-def eliminarRoles(id):
-    query = (text("delete from roles where id= (:id)"))
-    db.execute(query,{"id":id})
-    db.commit()
-    return redirect("/admin/roles")
+    return redirect("/admin/emp", navcat=query1)
     
 # endroles
 
