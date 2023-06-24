@@ -23,7 +23,7 @@
                         <tr class="text-center">
                             <th>id</th>
                             <th>Nombre</th>
-                            <th>Rol</th>
+                      
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
@@ -34,11 +34,18 @@
                                     <tr class="text-center">
                                         <th>{{r.id_repartidor}}</th>
                                         <th>{{r.nombre_rep}}</th>
-                                        {% if r.nombre_rep == 'Admin'%}
-                                            <th> <i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i> {{r.nombre_rep}} </th>
-                                        {%else%}
-                                            <th>{{r.nombre_rep}}</th>
-                                        {%endif%}
+                                       
+                                        {% if r.estado == True %}
+                                        <th>
+                                            <span class="badge badge-success rounded-pill d-inline">Activo</span>
+                                        </th>
+                                        {% else %}
+                                        <th>
+                                            <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
+                                        </th>
+
+                                        {% endif%}
+                                       
                                     
                                         
                                         <th>

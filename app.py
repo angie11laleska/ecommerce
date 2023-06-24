@@ -561,10 +561,6 @@ def addproductos():
                     where persona.id_persona = :idpersona""")
     resultadoemp = db.execute(query,{"idpersona":session["user_id"]}).fetchall()
     print(resultadoemp)
-
-    if not resultadoemp:
-        flash("Debe de registrar un emprendimiento para poder publicar un producto", "danger")
-        return redirect("/")
     
     query2 = text("select * from categoria")
     resultadocat = db.execute(query2).fetchall()

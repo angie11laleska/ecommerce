@@ -24,7 +24,6 @@
                         <tr class=" text-center">
                             <th>id</th>
                             <th>Nombre</th>
-                            <th>Rol</th>
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
@@ -35,11 +34,16 @@
                                     <tr class="text-center">
                                         <th>{{r.id_repartidor}}</th>
                                         <th>{{r.nombre_rep}}</th>
-                                        {% if r.nombre_rep == 'Admin' %}
-                                        <th class="text-center"><i class="fa-solid fa-crown fa-beat" style="color: #fbf304;"></i></i></th>
-                                        {%else %}
-                                            <th>{{r.nombre_rep}}</th>
-                                        {%endif%}
+                                        {% if r.estado == True %}
+                                        <th>
+                                            <span class="badge badge-success rounded-pill d-inline">Activo</span>
+                                        </th>
+                                        {% else %}
+                                        <th>
+                                            <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
+                                        </th>
+
+                                        {% endif%}
                                         <th>
                                             <a href="/admin/repartidor/eliminar/{{r.id_repartidor}}" class="btn btn-danger"> Eliminar</a>
                                         </th>

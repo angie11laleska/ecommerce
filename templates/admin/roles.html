@@ -34,6 +34,7 @@
                     <thead>
                         <tr class="text-center">
                             <th>id</th>
+                            <th>Nombre</th>
                             <th>Estado</th>
                             <th>Opciones</th>
                         </tr>
@@ -43,20 +44,23 @@
                                 {% for rol in roles %}
                                     <tr class="text-center">
                                         <th>{{rol.id}}</th>
-                                        <th>{{rol.estado}}</th>
+                                        <th>{{rol.nombre}}</th>
                                         {% if rol.estado == True %}
                                         <th>
                                             <span class="badge badge-success rounded-pill d-inline">Activo</span>
                                         </th>
-                                        {%else%}
+                                        {% else %}
                                         <th>
                                             <span class="badge badge-danger rounded-pill d-inline">Inactivo</span>
                                         </th>
-                                        {%endif%}
+
+                                        {% endif%}
+                                       
                                         <th>
                                             <a href="/admin/roles/editar/{{rol.id}}" class="btn btn-primary" style="background-color: #d8b3ff;"> Editar </a>
                                             <a href="/admin/roles/eliminar/{{rol.id}}" class="btn btn-danger" style="background-color: #d8b3ff;"> Eliminar </a>
                                         </th>
+                                        
                                     </tr>
                                 {% endfor %}
                         {%else %}
