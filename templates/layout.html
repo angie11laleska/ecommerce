@@ -107,9 +107,6 @@
                   <a class="dropdown-item" href="/misproductos">Productos</a>
                 </li>
                 <li><hr class="dropdown-divider" /></li>
-                <li>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                </li>
                 {%endif%}
           </ul>
           <!-- Left links -->
@@ -164,26 +161,27 @@
           <div class="row">
             <div class="col-sm-12 col-md-6">
               <h6>Acerca de</h6>
-              <p class="text-justify">Shop4YOU.com <i>Pagina web para realizar compras en lineas en diferentes emprendimientos de Nicaragua</i> es una iniciativa para los usuarios enfocada en ahorrar tiempo de busqueda en diferentes redes sociales y para los emprendedores una opcion para promocionar sus productos. Una pagina sencilla pero funcional, disfruta tu compra :)</p>
+              <p class="text-justify">Shop4U.com <i>Pagina web para realizar compras en lineas en diferentes emprendimientos de Nicaragua</i> es una iniciativa para los usuarios enfocada en ahorrar tiempo de busqueda en diferentes redes sociales y para los emprendedores una opcion para promocionar sus productos. Una pagina sencilla pero funcional, disfruta tu compra :)</p>
             </div>
 
             <div class="col-xs-6 col-md-3">
               <h6>Categorias</h6>
               <ul class="footer-links">
-                <li><a href="/categoria/Ropa">Ropa</a></li>
-                <li><a href="categoria/zapatos">Zapatos</a></li>
-                <li><a href="categoria/joyeria">Joyeria</a></li>
-                <li><a href="categoria/belleza">Belleza</a></li>
+                <li><a href="/categoria/{{cat.nombre_categoria}}">Ropa</a></li>
+                <li><a href="/categoria/{{cat.nombre_categoria}}">Zapatos</a></li>
+                <li><a href="/categoria/{{cat.nombre_categoria}}">Joyeria</a></li>
+                <li><a href="/categoria/{{cat.nombre_categoria}}">Belleza</a></li>
               </ul>
             </div>
 
             <div class="col-xs-6 col-md-3">
               <h6>Enlaces</h6>
               <ul class="footer-links">
-                <li><a href="principal">Principal</a></li>
-                <li><a href="emprendimiento">Emprendimientos</a></li>
-                <li><a href="registrarse">Registrarse</a></li>
-                <li><a href="emprendimiento">Comprar</a></li>
+                <li><a href="/">Principal</a></li>
+                <li><a href="/admin/emp">Emprendimientos</a></li>
+                <li><a href="/registrarse">Registrarse</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/logout">LogOut</a></li>
               </ul>
             </div>
           </div>
