@@ -1,4 +1,3 @@
-
 import os
 from flask import Flask, flash, redirect, render_template, request, session, url_for, current_app
 from sqlalchemy import create_engine, text
@@ -25,10 +24,7 @@ db = scoped_session(sessionmaker(bind=engine))
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
-
-
 @app.route("/")
-
 def index():
     query1 = db.execute(text("""
                             SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
@@ -39,16 +35,6 @@ def index():
     query2 = db.execute(text("Select * from producto p JOIN categoria c ON p.id_categoria = c.id_categoria order by id_producto DESC  "))
     flash('Este es el index', 'success')
     return render_template("index.html", navcat= query1, productos= query2)
-
-@app.route("/categorias", methods=["GET", "POST"])
-def categorias():
-    query1 = db.execute(text("""
-                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
-                            FROM categoria AS c1 
-                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
-                            ORDER BY c1.padre_id IS NULL DESC
-                            """))
-    return render_template("categorias.html", navcat=query1)
 
 @app.route("/emprendimiento", methods=["GET", "POST"])
 def emprendimiento():
@@ -68,14 +54,17 @@ def carrito():
         session["carrito"] = []
         id = request.form.get("id_persona")
         session["carrito"].append(id)
-        query1 = db.execute(text("""
+        
+        return render_template("carrito.html")
+    query1 = db.execute(text("""
                             SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
                             FROM categoria AS c1 
                             LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
                             ORDER BY c1.padre_id IS NULL DESC
                             """))
-        return render_template("carrito.html", navcat=query1)
-    
+    # Agregar esta línea para devolver una respuesta por defecto para el método GET
+    return render_template("carrito.html", navcat=query1)
+
 @app.route("/registrarse", methods=["GET", "POST"])
 def registrarse():
     """Registro del usuario"""
@@ -583,7 +572,7 @@ def addproductos():
     resultadoemp = db.execute(query,{"idpersona":session["user_id"]}).fetchall()
     print(resultadoemp)
 
-    if resultadoemp == []:
+    if not resultadoemp:
         flash("Debe de registrar un emprendimiento para poder publicar un producto", "danger")
         return redirect("/")
     
@@ -666,8 +655,6 @@ def productoid( id_producto):
                             ORDER BY c1.padre_id IS NULL DESC
                             """))
     return render_template("producto.html", resul = resultado, navcat=query1)
-
-
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin( ):

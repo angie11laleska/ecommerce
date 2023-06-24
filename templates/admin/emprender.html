@@ -47,11 +47,18 @@
                 {% endfor %}
             {%else %}
 
-               <h1>no hay categorias</h1>
+               <h1>
+                No hay emprendimientos
+               </h1>
             {%endif%}
         
     </tbody>
 </table>
+<!-- Agregar Emprendimiento Button -->
+<div class="text-center d-flex justify-content-center mt-3">
+    <a href="/admin/emp/agregar" class="btn btn-primary">Agregar Nuevo Emprendimiento</a>
+</div>
+
 {% endblock %}
 
 {% block modal%}
