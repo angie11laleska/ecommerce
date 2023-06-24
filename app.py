@@ -283,13 +283,13 @@ def eliminarCat(id):
     query = (text("delete from categoria where id_categoria= (:id)"))
     db.execute(query,{"id":id})
     db.commit()
-    query1 = db.execute(text("""
-                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
-                            FROM categoria AS c1 
-                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
-                            ORDER BY c1.padre_id IS NULL DESC
-                            """))
-    return redirect("/admin/categoria", navcat=query1)
+    #query1 = db.execute(text("""
+                            #SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
+                            #FROM categoria AS c1 
+                            #LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
+                            #ORDER BY c1.padre_id IS NULL DESC
+                            #"""))
+    return redirect("/admin/categoria")# #navcat=query1
 
 #Endcategoria
 
@@ -417,7 +417,7 @@ def roles():
                             LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
                             ORDER BY c1.padre_id IS NULL DESC
                             """))
-    return render_template("admin/roles.html", roles = query2, navcat=query1)
+    return render_template("admin/roles.html", roles = query2)
 
 @app.route("/admin/roles/editar/<int:id>" , methods=["GET","POST"])
 def editarRol(id):
@@ -444,14 +444,7 @@ def eliminarRol(id):
     query = (text("UPDATE roles SET estado = :estado where id= (:id)"))
     db.execute(query,{"id":id, "estado":False})
     db.commit()
-    query1 = db.execute(text("""
-                            SELECT c1.id_categoria, c1.nombre_categoria, c2.nombre_categoria AS cat_padre 
-                            FROM categoria AS c1 
-                            LEFT JOIN categoria AS c2 ON c1.padre_id = c2.id_categoria
-                            ORDER BY c1.padre_id IS NULL DESC
-                            """))
-    return redirect("/admin/emp", navcat=query1)
-    
+    return redirect("/admin/roles")
 # endroles
 
 #inicio repartidor
